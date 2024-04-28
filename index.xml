@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>© Copyright notice</copyright>
-    <lastBuildDate>Sun, 28 Apr 2024 15:09:33 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 28 Apr 2024 15:46:48 +0800</lastBuildDate>
     <atom:link href="https://linuzb.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kubernetes 部署 longhorn 存储</title>
+      <link>https://linuzb.github.io/2024/04/kubernetes-%E9%83%A8%E7%BD%B2-longhorn-%E5%AD%98%E5%82%A8/</link>
+      <pubDate>Sun, 28 Apr 2024 15:46:48 +0800</pubDate>
+      <guid>https://linuzb.github.io/2024/04/kubernetes-%E9%83%A8%E7%BD%B2-longhorn-%E5%AD%98%E5%82%A8/</guid>
+      <description>背景 longhorn 是基于 Kubernetes 构建的云原生分布式存储&#xA;依赖 Installation Requirements&#xA;ubuntu 安装依赖 运行以下脚本，检查是否满足依赖&#xA;1 curl -sSfL https://raw.githubusercontent.com/longhorn/longhorn/v1.6.1/scripts/environment_check.sh | bash 如果缺少依赖，需要安装依赖，例如&#xA;1 2 apt-get install open-iscsi apt-get install nfs-common kubectl 安装及 kubeconfig 配置&#xA;部署 helm Longhorn | Documentation&#xA;1 2 3 4 5 6 helm pull longhorn/longhorn --version 1.6.1 helm upgrade --install longhorn ./longhorn \ --namespace longhorn-system \ --create-namespace \ --version 1.6.1 \ --values config.yaml config.yaml&#xA;1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 defaultSettings: # 配置默认数据存放地址 defaultDataPath: /data/longhorn service: ui: # -- Service type for Longhorn UI.</description>
+    </item>
     <item>
       <title>kubernetes 监控部署</title>
       <link>https://linuzb.github.io/2024/04/kubernetes-%E7%9B%91%E6%8E%A7%E9%83%A8%E7%BD%B2/</link>
