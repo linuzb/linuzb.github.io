@@ -7,13 +7,55 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>© Copyright notice</copyright>
-    <lastBuildDate>Sun, 28 Apr 2024 15:46:48 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 28 Apr 2024 15:57:55 +0800</lastBuildDate>
     <atom:link href="https://linuzb.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker</title>
+      <link>https://linuzb.github.io/tags/docker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://linuzb.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Jupyter</title>
+      <link>https://linuzb.github.io/tags/jupyter/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://linuzb.github.io/tags/jupyter/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Jupyterhub</title>
+      <link>https://linuzb.github.io/tags/jupyterhub/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://linuzb.github.io/tags/jupyterhub/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Jupyterlab</title>
+      <link>https://linuzb.github.io/tags/jupyterlab/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://linuzb.github.io/tags/jupyterlab/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Kubernetes</title>
       <link>https://linuzb.github.io/tags/kubernetes/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://linuzb.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pycharm</title>
+      <link>https://linuzb.github.io/tags/pycharm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://linuzb.github.io/tags/pycharm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>VsCode</title>
+      <link>https://linuzb.github.io/tags/vscode/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://linuzb.github.io/tags/vscode/</guid>
       <description></description>
     </item>
     <item>

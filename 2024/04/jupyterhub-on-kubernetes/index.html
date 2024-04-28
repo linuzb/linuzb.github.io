@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Jupyterhub on Kubernetes - Linuzb&#39; 的博客</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	
+  <meta itemprop="name" content="Jupyterhub on Kubernetes">
+  <meta itemprop="description" content="前置准备 首先需要部署 kubernetes 集群，参考k8s deploy Helm | Installing Helm 安装 helm 存储：Longhorn provider 部署 Longhorn 参考 Longhorn deploy
+接入 github oauth 本文使用 github oauth 作为认证方式，首先我们需要提前注册一个 GitHub OAuth 应用程序，请参阅 GitHub 有关注册应用程序的官方文档 registering an app.
+然后我们得到三个信息
+client-id client-secret oauthCallbackUrl 为了避免在配置中明文保存密码，我们将以上信息通过 secret 的形式存储在 Kubernetes 中，可以使用挂载 secret 的形式使用 secret 变量。
+创建secret 接下来我们给 client-id 和 client-secret 创建secret
+1 2 3 echo -n &#34;client-id&#34; | base64 echo -n &#34;client-secret&#34; | base64 echo -n &#34;oauthCallbackUrl&#34; | base64 将以上结果填充到用于创建 secret 的 yaml 中">
+  <meta itemprop="datePublished" content="2024-04-28T15:57:55+08:00">
+  <meta itemprop="dateModified" content="2024-04-28T15:57:55+08:00">
+  <meta itemprop="wordCount" content="262">
+  <meta itemprop="keywords" content="Kubernetes,Jupyterhub,Jupyterlab,Jupyter,Docker,VsCode,Pycharm"><meta property="og:url" content="https://linuzb.github.io/2024/04/jupyterhub-on-kubernetes/">
+  <meta property="og:site_name" content="Linuzb&#39; 的博客">
+  <meta property="og:title" content="Jupyterhub on Kubernetes">
+  <meta property="og:description" content="前置准备 首先需要部署 kubernetes 集群，参考k8s deploy Helm | Installing Helm 安装 helm 存储：Longhorn provider 部署 Longhorn 参考 Longhorn deploy
+接入 github oauth 本文使用 github oauth 作为认证方式，首先我们需要提前注册一个 GitHub OAuth 应用程序，请参阅 GitHub 有关注册应用程序的官方文档 registering an app.
+然后我们得到三个信息
+client-id client-secret oauthCallbackUrl 为了避免在配置中明文保存密码，我们将以上信息通过 secret 的形式存储在 Kubernetes 中，可以使用挂载 secret 的形式使用 secret 变量。
+创建secret 接下来我们给 client-id 和 client-secret 创建secret
+1 2 3 echo -n &#34;client-id&#34; | base64 echo -n &#34;client-secret&#34; | base64 echo -n &#34;oauthCallbackUrl&#34; | base64 将以上结果填充到用于创建 secret 的 yaml 中">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-04-28T15:57:55+08:00">
+    <meta property="article:modified_time" content="2024-04-28T15:57:55+08:00">
+    <meta property="article:tag" content="Kubernetes">
+    <meta property="article:tag" content="Jupyterhub">
+    <meta property="article:tag" content="Jupyterlab">
+    <meta property="article:tag" content="Jupyter">
+    <meta property="article:tag" content="Docker">
+    <meta property="article:tag" content="VsCode">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Jupyterhub on Kubernetes">
+<meta name="twitter:description" content="前置准备 首先需要部署 kubernetes 集群，参考k8s deploy Helm | Installing Helm 安装 helm 存储：Longhorn provider 部署 Longhorn 参考 Longhorn deploy
+接入 github oauth 本文使用 github oauth 作为认证方式，首先我们需要提前注册一个 GitHub OAuth 应用程序，请参阅 GitHub 有关注册应用程序的官方文档 registering an app.
+然后我们得到三个信息
+client-id client-secret oauthCallbackUrl 为了避免在配置中明文保存密码，我们将以上信息通过 secret 的形式存储在 Kubernetes 中，可以使用挂载 secret 的形式使用 secret 变量。
+创建secret 接下来我们给 client-id 和 client-secret 创建secret
+1 2 3 echo -n &#34;client-id&#34; | base64 echo -n &#34;client-secret&#34; | base64 echo -n &#34;oauthCallbackUrl&#34; | base64 将以上结果填充到用于创建 secret 的 yaml 中">
+<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/main.css" />
+
+        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://linuzb.github.io/css/dark.css" />
+
+	<script src="https://linuzb.github.io/js/feather.min.js"></script>
+	
+		<script src="https://linuzb.github.io/js/main.js"></script>
+</head>
+
+
+<body>
+
+
+	
+	<div class="container wrapper">
+		<div class="header">
+	
+	<h1 class="site-title"><a href="https://linuzb.github.io/">Linuzb&#39; 的博客</a></h1>
+	<div class="site-description"><p>记录学习点滴</p><nav class="nav social">
+			<ul class="flat"><li><a href="https://github.com/linuzb" title="Github"><i data-feather="github"></i></a></li><li><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></li><span class="scheme-toggle"><a href="#" id="scheme-toggle"></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags &amp; Stats</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post">
+    <div class="post-header">
+    
+    <div class="meta">
+        <div class="date">
+            <span class="day">28</span>
+            <span class="rest">Apr 2024</span>
+        </div>
+    </div>
+    
+    <div class="matter">
+        <h1 class="title">Jupyterhub on Kubernetes</h1>
+    </div>
+</div>
+
+
+    
+    
+    <h2 id="前置准备">前置准备</h2>
+<ul>
+<li>首先需要部署 kubernetes 集群，参考<a href="https://linuzb.github.io/2024/04/kubespray-%E9%83%A8%E7%BD%B2-kubernetes/" title="deply">k8s deploy</a></li>
+<li><a href="https://helm.sh/docs/intro/install/">Helm | Installing Helm</a> 安装 helm</li>
+</ul>
+<h3 id="存储longhorn-provider">存储：Longhorn provider</h3>
+<p>部署 Longhorn 参考 <a href="https://linuzb.github.io/2024/04/kubespray-%E9%83%A8%E7%BD%B2-kubernetes/">Longhorn deploy</a></p>
+<h3 id="接入-github-oauth">接入 github oauth</h3>
+<p>本文使用 github oauth 作为认证方式，首先我们需要提前注册一个 GitHub OAuth 应用程序，请参阅 GitHub 有关注册应用程序的官方文档 <a href="https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app">registering an app</a>.</p>
+<p>然后我们得到三个信息</p>
+<ol>
+<li>client-id</li>
+<li>client-secret</li>
+<li>oauthCallbackUrl</li>
+</ol>
+<p>为了避免在配置中明文保存密码，我们将以上信息通过 secret 的形式存储在 Kubernetes 中，可以使用挂载 secret 的形式使用 secret 变量。</p>
+<h3 id="创建secret">创建secret</h3>
+<p>接下来我们给 client-id 和 client-secret 创建secret</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#0086b3">echo</span> -n <span style="color:#d14">&#34;client-id&#34;</span> | base64
+</span></span><span style="display:flex;"><span><span style="color:#0086b3">echo</span> -n <span style="color:#d14">&#34;client-secret&#34;</span> | base64
+</span></span><span style="display:flex;"><span><span style="color:#0086b3">echo</span> -n <span style="color:#d14">&#34;oauthCallbackUrl&#34;</span> | base64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>将以上结果填充到用于创建 secret 的 yaml 中</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#000080">apiVersion</span>:<span style="color:#bbb"> </span>v1<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">kind</span>:<span style="color:#bbb"> </span>Secret<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">name</span>:<span style="color:#bbb"> </span>githubsecret<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">namespace</span>:<span style="color:#bbb"> </span>jhub<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">type</span>:<span style="color:#bbb"> </span>Opaque<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">data</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">clientId</span>:<span style="color:#bbb"> </span><span style="color:#d14">&#34;base64(clientId)&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">clientSecret</span>:<span style="color:#bbb"> </span><span style="color:#d14">&#34;base64(clientSecret)&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">oauthCallbackUrl</span>:<span style="color:#bbb"> </span><span style="color:#d14">&#34;base64(oauthCallbackUrl)&#34;</span><span style="color:#bbb">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意：该 yaml 配置独立存放</p>
+<h2 id="使用-helm-安装-jupyterhub">使用 helm 安装 jupyterhub</h2>
+<p>完整的 helm values 文件参考 <a href="https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/main/jupyterhub/values.yaml">values.yaml</a></p>
+<p>本文中介绍的功能配置全部放在 <code>./config.yaml</code> 文件中，该文件会覆盖 helm chart 中默认的 <code>values.yaml</code></p>
+<pre tabindex="0"><code># Let helm the command line tool know about a Helm chart repository
+# that we decide to name jupyterhub.
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+# 查看版本
+helm search repo jupyterhub -l
+# 下载到本地
+helm pull jupyterhub/jupyterhub
+# 修改 config.yaml 从本地安装
+helm upgrade --cleanup-on-fail \
+  --install jupyterhub ./jupyterhub \
+  --namespace jhub \
+  --create-namespace \
+  --version=3.3.6 \
+  --values config.yaml
+</code></pre><h3 id="configyaml">config.yaml</h3>
+<p>TODO: 补充 config.yaml</p>
+<h3 id="jupyterhub-运行其他服务">jupyterhub 运行其他服务</h3>
+<h4 id="vscode">vscode</h4>
+<p><a href="https://discourse.jupyter.org/t/how-to-configure-jupyterhub-to-run-code-server/11578">How to configure Jupyterhub to run code-server? - JupyterHub - Jupyter Community Forum</a></p>
+<h5 id="jetbrans">jetbrans</h5>
+<p><a href="https://github.com/tiaden/jupyter-projector-proxy">tiaden/jupyter-projector-proxy (github.com)</a></p>
+<h2 id="本地调试">本地调试</h2>
+<p>本地运行 single-user-notebook</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>docker run <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    -p 8888:8888 <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    -v /home/linuzb/Projects/huggingface/chatglm2-6b:/home/jovyan/data/huggingface/chatglm2-6b <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    --gpus all <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    --rm <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    registry.cn-hangzhou.aliyuncs.com/linuzb/pytorch-notebook:cuda11-pytorch-2.2.1-4cb74da
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="参考">参考</h2>
+<p>可以看下 binderhub</p>
+<ul>
+<li><a href="https://2i2c.org/blog/2024/jupyterhub-binderhub-gesis/">Integrating BinderHub with JupyterHub: Empowering users to manage their own environments | 2i2c</a></li>
+<li><a href="https://github.com/jupyterhub/binderhub">jupyterhub/binderhub: Run your code in the cloud, with technology so advanced, it feels like magic! (github.com)</a></li>
+</ul>
+
+    <hr class="footer-separator" />
+<div class="tags">
+    
+    
+    <ul class="flat">
+        
+        
+        <li class="tag-li"><a href="/tags/kubernetes">Kubernetes</a>
+        </li>
+        
+        
+        <li class="tag-li"><a href="/tags/jupyterhub">Jupyterhub</a>
+        </li>
+        
+        
+        <li class="tag-li"><a href="/tags/jupyterlab">Jupyterlab</a>
+        </li>
+        
+        
+        <li class="tag-li"><a href="/tags/jupyter">Jupyter</a>
+        </li>
+        
+        
+        <li class="tag-li"><a href="/tags/docker">Docker</a>
+        </li>
+        
+        
+        <li class="tag-li"><a href="/tags/vscode">VsCode</a>
+        </li>
+        
+        
+        <li class="tag-li"><a href="/tags/pycharm">Pycharm</a>
+        </li>
+        
+    </ul>
+    
+    
+</div>
+
+
+<div class="back">
+    <a href="https://github.com/linuzb/linuzb-blog/blob/master/content/posts/jupyterhub-on-kubernetes.md" title="github"><i
+            data-feather="github"></i> Edit this on GitHub</a>
+</div>
+
+
+<div class="back">
+    <a href="https://linuzb.github.io/"><span aria-hidden="true">← Back</span></a>
+</div>
+
+
+<div class="back">
+    
+    
+    Next time, we'll talk about <i>"What Tiger King can teach us about x86 Assembly"</i>
+    
+    
+</div>
+
+</div>
+
+	</div>
+	
+
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div>2024  © Copyright notice </div>
+		
+	</nav>
+</div><script>feather.replace()</script>
+	
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VsCode on Linuzb&#39; 的博客</title>
+    <link>https://linuzb.github.io/tags/vscode/</link>
+    <description>Recent content in VsCode on Linuzb&#39; 的博客</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <copyright>© Copyright notice</copyright>
+    <lastBuildDate>Sun, 28 Apr 2024 15:57:55 +0800</lastBuildDate>
+    <atom:link href="https://linuzb.github.io/tags/vscode/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Jupyterhub on Kubernetes</title>
+      <link>https://linuzb.github.io/2024/04/jupyterhub-on-kubernetes/</link>
+      <pubDate>Sun, 28 Apr 2024 15:57:55 +0800</pubDate>
+      <guid>https://linuzb.github.io/2024/04/jupyterhub-on-kubernetes/</guid>
+      <description>前置准备 首先需要部署 kubernetes 集群，参考k8s deploy Helm | Installing Helm 安装 helm 存储：Longhorn provider 部署 Longhorn 参考 Longhorn deploy&#xA;接入 github oauth 本文使用 github oauth 作为认证方式，首先我们需要提前注册一个 GitHub OAuth 应用程序，请参阅 GitHub 有关注册应用程序的官方文档 registering an app.&#xA;然后我们得到三个信息&#xA;client-id client-secret oauthCallbackUrl 为了避免在配置中明文保存密码，我们将以上信息通过 secret 的形式存储在 Kubernetes 中，可以使用挂载 secret 的形式使用 secret 变量。&#xA;创建secret 接下来我们给 client-id 和 client-secret 创建secret&#xA;1 2 3 echo -n &amp;#34;client-id&amp;#34; | base64 echo -n &amp;#34;client-secret&amp;#34; | base64 echo -n &amp;#34;oauthCallbackUrl&amp;#34; | base64 将以上结果填充到用于创建 secret 的 yaml 中</description>
+    </item>
+  </channel>
+</rss>
