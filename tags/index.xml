@@ -7,13 +7,41 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>© Copyright notice</copyright>
-    <lastBuildDate>Sun, 28 Apr 2024 10:06:36 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 28 Apr 2024 15:09:33 +0800</lastBuildDate>
     <atom:link href="https://linuzb.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DCGM</title>
+      <link>https://linuzb.github.io/tags/dcgm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://linuzb.github.io/tags/dcgm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>GPU Monitoring</title>
+      <link>https://linuzb.github.io/tags/gpu-monitoring/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://linuzb.github.io/tags/gpu-monitoring/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Kubernetes</title>
       <link>https://linuzb.github.io/tags/kubernetes/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://linuzb.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Monitoring</title>
+      <link>https://linuzb.github.io/tags/monitoring/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://linuzb.github.io/tags/monitoring/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Prometheus</title>
+      <link>https://linuzb.github.io/tags/prometheus/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://linuzb.github.io/tags/prometheus/</guid>
       <description></description>
     </item>
     <item>

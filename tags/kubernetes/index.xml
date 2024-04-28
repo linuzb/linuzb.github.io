@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>© Copyright notice</copyright>
-    <lastBuildDate>Sun, 28 Apr 2024 10:06:36 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 28 Apr 2024 15:09:33 +0800</lastBuildDate>
     <atom:link href="https://linuzb.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>kubernetes 监控部署</title>
+      <link>https://linuzb.github.io/2024/04/kubernetes-%E7%9B%91%E6%8E%A7%E9%83%A8%E7%BD%B2/</link>
+      <pubDate>Sun, 28 Apr 2024 15:09:33 +0800</pubDate>
+      <guid>https://linuzb.github.io/2024/04/kubernetes-%E7%9B%91%E6%8E%A7%E9%83%A8%E7%BD%B2/</guid>
+      <description>准备 首先需要部署 kubernetes 集群，参考k8s deploy helm 安装 prometheus 软件栈 Setting up Prometheus — NVIDIA GPU Telemetry 1.0.0 documentation&#xA;使用以下命令安装 prometheus&#xA;1 2 3 4 5 6 7 8 9 helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \ --namespace prometheus \ --create-namespace \ --set prometheus.service.type=NodePort \ --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false \ --set prometheusOperator.admissionWebhooks.patch.image.registry=registry.cn-hangzhou.aliyuncs.com \ --set prometheusOperator.admissionWebhooks.patch.image.repository=linuzb/kube-webhook-certgen \ --set kube-state-metrics.image.registry=registry.cn-hangzhou.aliyuncs.com \ --set kube-state-metrics.image.repository=linuzb/kube-state-metrics 安装 GPU 监控 DCGM 1 2 3 4 helm upgrade --install \ dcgm-exporter \ gpu-helm-charts/dcgm-exporter \ --values config.</description>
+    </item>
     <item>
       <title>Kubespray 部署 kubernetes</title>
       <link>https://linuzb.github.io/2024/04/kubespray-%E9%83%A8%E7%BD%B2-kubernetes/</link>
