@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Docker 入门文档 - Linuzb&#39; 的博客</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	
+  <meta itemprop="name" content="Docker 入门文档">
+  <meta itemprop="description" content="前言 本文将简单介绍 Docker 的安装与使用过程
+docker 安装 docker 官方文档提供了各个系统的安装方式，参考 Install Docker Engine，但是由于国内网络环境，使用官方方式会比较慢，因此国内环境不推荐这种方式安装。下面我们介绍另一种国内安装方式。
+自动化的安装方式，本节内容源自 清华大学开源镜像站|Docker CE 软件仓库，其他安装方式可以参考该文档。
+Docker 提供了一个自动配置与安装的脚本，支持 Debian、RHEL、SUSE 系列及衍生系统的安装。
+以下内容假定
+您为 root 用户，或有 sudo 权限，或知道 root 密码； 您系统上有 curl 或 wget 1 2 3 4 5 export DOWNLOAD_URL=&#34;https://mirrors.tuna.tsinghua.edu.cn/docker-ce&#34; # 如您使用 curl curl -fsSL https://get.docker.com/ | sh # 如您使用 wget wget -O- https://get.docker.com/ | sh 使用非 root 使用 docker 通过以上方式安装的docker只能通过 root 用户或者 sudo 权限使用。
+接下来我们将配置非 root 用户使用 docker
+创建 docker 用户组 1 sudo groupadd docker 将当前用户添加到 docker 用户组 1 sudo usermod -aG docker $USER 激活用户组配置 1 newgrp docker 测试 docker 命令 1 docker run hello-world 此命令将下载测镜像并在容器中运行。容器运行时，它会打印一条信息并退出。">
+  <meta itemprop="datePublished" content="2024-04-29T22:01:37+08:00">
+  <meta itemprop="dateModified" content="2024-04-29T22:01:37+08:00">
+  <meta itemprop="wordCount" content="515">
+  <meta itemprop="keywords" content="Docker,Container"><meta property="og:url" content="https://linuzb.github.io/2024/04/docker-%E5%85%A5%E9%97%A8%E6%96%87%E6%A1%A3/">
+  <meta property="og:site_name" content="Linuzb&#39; 的博客">
+  <meta property="og:title" content="Docker 入门文档">
+  <meta property="og:description" content="前言 本文将简单介绍 Docker 的安装与使用过程
+docker 安装 docker 官方文档提供了各个系统的安装方式，参考 Install Docker Engine，但是由于国内网络环境，使用官方方式会比较慢，因此国内环境不推荐这种方式安装。下面我们介绍另一种国内安装方式。
+自动化的安装方式，本节内容源自 清华大学开源镜像站|Docker CE 软件仓库，其他安装方式可以参考该文档。
+Docker 提供了一个自动配置与安装的脚本，支持 Debian、RHEL、SUSE 系列及衍生系统的安装。
+以下内容假定
+您为 root 用户，或有 sudo 权限，或知道 root 密码； 您系统上有 curl 或 wget 1 2 3 4 5 export DOWNLOAD_URL=&#34;https://mirrors.tuna.tsinghua.edu.cn/docker-ce&#34; # 如您使用 curl curl -fsSL https://get.docker.com/ | sh # 如您使用 wget wget -O- https://get.docker.com/ | sh 使用非 root 使用 docker 通过以上方式安装的docker只能通过 root 用户或者 sudo 权限使用。
+接下来我们将配置非 root 用户使用 docker
+创建 docker 用户组 1 sudo groupadd docker 将当前用户添加到 docker 用户组 1 sudo usermod -aG docker $USER 激活用户组配置 1 newgrp docker 测试 docker 命令 1 docker run hello-world 此命令将下载测镜像并在容器中运行。容器运行时，它会打印一条信息并退出。">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-04-29T22:01:37+08:00">
+    <meta property="article:modified_time" content="2024-04-29T22:01:37+08:00">
+    <meta property="article:tag" content="Docker">
+    <meta property="article:tag" content="Container">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Docker 入门文档">
+<meta name="twitter:description" content="前言 本文将简单介绍 Docker 的安装与使用过程
+docker 安装 docker 官方文档提供了各个系统的安装方式，参考 Install Docker Engine，但是由于国内网络环境，使用官方方式会比较慢，因此国内环境不推荐这种方式安装。下面我们介绍另一种国内安装方式。
+自动化的安装方式，本节内容源自 清华大学开源镜像站|Docker CE 软件仓库，其他安装方式可以参考该文档。
+Docker 提供了一个自动配置与安装的脚本，支持 Debian、RHEL、SUSE 系列及衍生系统的安装。
+以下内容假定
+您为 root 用户，或有 sudo 权限，或知道 root 密码； 您系统上有 curl 或 wget 1 2 3 4 5 export DOWNLOAD_URL=&#34;https://mirrors.tuna.tsinghua.edu.cn/docker-ce&#34; # 如您使用 curl curl -fsSL https://get.docker.com/ | sh # 如您使用 wget wget -O- https://get.docker.com/ | sh 使用非 root 使用 docker 通过以上方式安装的docker只能通过 root 用户或者 sudo 权限使用。
+接下来我们将配置非 root 用户使用 docker
+创建 docker 用户组 1 sudo groupadd docker 将当前用户添加到 docker 用户组 1 sudo usermod -aG docker $USER 激活用户组配置 1 newgrp docker 测试 docker 命令 1 docker run hello-world 此命令将下载测镜像并在容器中运行。容器运行时，它会打印一条信息并退出。">
+<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/main.css" />
+
+        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://linuzb.github.io/css/dark.css" />
+
+	<script src="https://linuzb.github.io/js/feather.min.js"></script>
+	
+		<script src="https://linuzb.github.io/js/main.js"></script>
+</head>
+
+
+<body>
+
+
+	
+	<div class="container-wide wrapper">
+		<div class="header">
+	
+	<h1 class="site-title"><a href="https://linuzb.github.io/">Linuzb&#39; 的博客</a></h1>
+	<div class="site-description"><p>记录学习点滴</p><nav class="nav social">
+			<ul class="flat"><li><a href="https://github.com/linuzb" title="Github"><i data-feather="github"></i></a></li><li><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></li><span class="scheme-toggle"><a href="#" id="scheme-toggle"></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags &amp; Stats</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		
+<div class="article-nav" id="article-nav-id">
+    <div class="post">
+        <div class="post-header">
+    
+    <div class="meta">
+        <div class="date">
+            <span class="day">29</span>
+            <span class="rest">Apr 2024</span>
+        </div>
+    </div>
+    
+    <div class="matter">
+        <h1 class="title">Docker 入门文档</h1>
+    </div>
+</div>
+
+
+        
+        
+        <aside class="toc" id="static-toc">
+            <header>
+                <h3>Contents</h3>
+            </header>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#docker-安装">docker 安装</a>
+      <ol>
+        <li><a href="#使用非-root-使用-docker">使用非 root 使用 docker</a></li>
+        <li><a href="#镜像加速">镜像加速</a></li>
+      </ol>
+    </li>
+    <li><a href="#获取镜像">获取镜像</a></li>
+    <li><a href="#操作容器">操作容器</a>
+      <ol>
+        <li><a href="#启动一个-bash-终端">启动一个 bash 终端</a></li>
+      </ol>
+    </li>
+    <li><a href="#存储">存储</a>
+      <ol>
+        <li><a href="#挂载一个主机目录作为数据卷">挂载一个主机目录作为数据卷</a></li>
+      </ol>
+    </li>
+    <li><a href="#使用-dockerfile-定制镜像">使用 Dockerfile 定制镜像</a>
+      <ol>
+        <li><a href="#from-指定基础镜像">FROM 指定基础镜像</a></li>
+        <li><a href="#run-执行命令">RUN 执行命令</a></li>
+        <li><a href="#dockerfile-指令详解">Dockerfile 指令详解</a></li>
+        <li><a href="#构建镜像">构建镜像</a></li>
+      </ol>
+    </li>
+    <li><a href="#访问仓库">访问仓库</a>
+      <ol>
+        <li><a href="#dockerhub">dockerhub</a></li>
+        <li><a href="#自动构建镜像">自动构建镜像</a></li>
+      </ol>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ol>
+</nav>
+        </aside>
+        
+
+        <h2 id="前言">前言</h2>
+<p>本文将简单介绍 Docker 的安装与使用过程</p>
+<h2 id="docker-安装">docker 安装</h2>
+<p>docker 官方文档提供了各个系统的安装方式，参考 <a href="https://docs.docker.com/engine/install/">Install Docker Engine</a>，但是由于国内网络环境，使用官方方式会比较慢，因此国内环境不推荐这种方式安装。下面我们介绍另一种国内安装方式。</p>
+<p>自动化的安装方式，本节内容源自 <a href="https://mirrors.tuna.tsinghua.edu.cn/help/docker-ce/">清华大学开源镜像站|Docker CE 软件仓库</a>，其他安装方式可以参考该文档。</p>
+<p>Docker 提供了一个自动配置与安装的脚本，支持 Debian、RHEL、SUSE 系列及衍生系统的安装。</p>
+<p>以下内容假定</p>
+<ul>
+<li>您为 root 用户，或有 sudo 权限，或知道 root 密码；</li>
+<li>您系统上有 curl 或 wget</li>
+</ul>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#0086b3">export</span> <span style="color:#008080">DOWNLOAD_URL</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;https://mirrors.tuna.tsinghua.edu.cn/docker-ce&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># 如您使用 curl</span>
+</span></span><span style="display:flex;"><span>curl -fsSL https://get.docker.com/ | sh
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># 如您使用 wget</span>
+</span></span><span style="display:flex;"><span>wget -O- https://get.docker.com/ | sh
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="使用非-root-使用-docker">使用非 root 使用 docker</h3>
+<p>通过以上方式安装的docker只能通过 root 用户或者 sudo 权限使用。</p>
+<p>接下来我们将配置非 root 用户使用 docker</p>
+<ol>
+<li>创建 docker 用户组</li>
+</ol>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo groupadd docker
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>将当前用户添加到 docker 用户组</li>
+</ol>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo usermod -aG docker <span style="color:#008080">$USER</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>激活用户组配置</li>
+</ol>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>newgrp docker
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="4">
+<li>测试 docker 命令</li>
+</ol>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>docker run hello-world
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>此命令将下载测镜像并在容器中运行。容器运行时，它会打印一条信息并退出。</p>
+<h3 id="镜像加速">镜像加速</h3>
+<p>国内从 Docker Hub 拉取镜像有时会遇到困难，此时可以配置镜像加速器。Docker 官方和国内很多云服务商都提供了国内加速器服务。</p>
+<p>配置加速地址</p>
+<p>创建或修改 <code>/etc/docker/daemon.json</code>：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo mkdir -p /etc/docker
+</span></span><span style="display:flex;"><span>sudo tee /etc/docker/daemon.json <span style="color:#d14">&lt;&lt;-&#39;EOF&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">{
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">    &#34;registry-mirrors&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">        &#34;https://dockerproxy.com&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">        &#34;https://docker.mirrors.ustc.edu.cn&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">        &#34;https://docker.nju.edu.cn&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">    ]
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">}
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">EOF</span>
+</span></span><span style="display:flex;"><span>sudo systemctl daemon-reload
+</span></span><span style="display:flex;"><span>sudo systemctl restart docker
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a href="https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6">Docker Hub 镜像加速器列表</a></p>
+<h2 id="获取镜像">获取镜像</h2>
+<p><a href="https://hub.docker.com/search?q=&amp;type=image">Docker Hub</a> 上有大量的高质量的镜像可以用，我们可以提前在dockerhub 查找自己感兴趣的镜像 pull 到本地。</p>
+<p>例如我们想下载一个 ubuntu镜像，版本为 18.04.</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ docker pull ubuntu:18.04
+</span></span><span style="display:flex;"><span>18.04: Pulling from library/ubuntu
+</span></span><span style="display:flex;"><span>92dc2a97ff99: Pull <span style="color:#0086b3">complete</span>
+</span></span><span style="display:flex;"><span>be13a9d27eb8: Pull <span style="color:#0086b3">complete</span>
+</span></span><span style="display:flex;"><span>c8299583700a: Pull <span style="color:#0086b3">complete</span>
+</span></span><span style="display:flex;"><span>Digest: sha256:4bc3ae6596938cb0d9e5ac51a1152ec9dcac2a1c50829c74abd9c4361e321b26
+</span></span><span style="display:flex;"><span>Status: Downloaded newer image <span style="color:#000;font-weight:bold">for</span> ubuntu:18.04
+</span></span><span style="display:flex;"><span>docker.io/library/ubuntu:18.04
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>默认情况下，docker 会从 docker.io 这个地址获取镜像。如果我们想从其他镜像仓库获取镜像，我们可以使用命令</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ docker pull <span style="color:#000;font-weight:bold">[</span>选项<span style="color:#000;font-weight:bold">]</span> <span style="color:#000;font-weight:bold">[</span>Docker Registry 地址<span style="color:#000;font-weight:bold">[</span>:端口号<span style="color:#000;font-weight:bold">]</span>/<span style="color:#000;font-weight:bold">]</span>仓库名<span style="color:#000;font-weight:bold">[</span>:标签<span style="color:#000;font-weight:bold">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>例如，我想从阿里云镜像中心下载镜像，我可以这样</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>docker pull registry.cn-hangzhou.aliyuncs.com/linuzb/scipy-notebook:python-3.9.13-3893868
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里我们说一下镜像名称的格式。</p>
+<ul>
+<li>Docker 镜像仓库地址：地址的格式一般是 &lt;域名/IP&gt;[:端口号]。默认地址是 Docker Hub(docker.io)。上例是 <code>registry.cn-hangzhou.aliyuncs.com</code></li>
+<li>仓库名：如之前所说，这里的仓库名是两段式名称，即 &lt;用户名&gt;/&lt;软件名&gt;。对于 Docker Hub，如果不给出用户名，则默认为 library，也就是官方镜像。在上面例子中，用户名是 <code>linuzb</code>, 软件名是 <code>scipy-notebook</code></li>
+<li>标签：即不通版本。本例是 <code>python-3.9.13-3893868</code>。如果不提供标签，默认使用 <code>latest</code>。</li>
+</ul>
+<h2 id="操作容器">操作容器</h2>
+<p>所需要的命令主要为 <code>docker run</code>。当利用 <code>docker run</code> 来创建容器时，会先检查镜像是否存在，如果不存在会自动下载。</p>
+<p>这里举一个例子，详细教程可以参考 <a href="https://yeasy.gitbook.io/docker_practice/container/run">Docker — 从入门到实践|操作容器</a></p>
+<h3 id="启动一个-bash-终端">启动一个 bash 终端</h3>
+<p>加入我想启动一个 ubuntu 18.04的环境，并通过 bash 进行一些命令操作。我可以使用以下docker命令</p>
+<p>下面的命令则启动一个 bash 终端，允许用户进行交互。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ docker run -t -i ubuntu:18.04 /bin/bash
+</span></span><span style="display:flex;"><span>root@af8bae53bdd3:/#
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中，<code>-t</code> 选项让Docker分配一个伪终端（pseudo-tty）并绑定到容器的标准输入上， <code>-i</code> 则让容器的标准输入保持打开。</p>
+<p>在交互模式下，用户可以通过所创建的终端来输入命令，例如</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@af8bae53bdd3:/# <span style="color:#0086b3">pwd</span>
+</span></span><span style="display:flex;"><span>/
+</span></span><span style="display:flex;"><span>root@af8bae53bdd3:/# ls
+</span></span><span style="display:flex;"><span>bin boot dev etc home lib lib64 media mnt opt proc root run sbin srv sys tmp usr var
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="存储">存储</h2>
+<h3 id="挂载一个主机目录作为数据卷">挂载一个主机目录作为数据卷</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ docker run -d -P <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    --name web <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    -v /src/webapp:/usr/share/nginx/html <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    nginx:alpine
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面的命令加载主机的 /src/webapp 目录到容器的 /usr/share/nginx/html目录。</p>
+<h2 id="使用-dockerfile-定制镜像">使用 Dockerfile 定制镜像</h2>
+<p>Dockerfile 是一个文本文件，其内包含了一条条的指令(Instruction)，每一条指令构建一层，因此每一条指令的内容，就是描述该层应当如何构建。</p>
+<p>Dockerfile 指令的顺序很重要。Docker 构建由一系列有序的构建指令组成。Dockerfile 中的每条指令大致相当于一个镜像层。下图说明了 Dockerfile 如何转化为镜像中的层。</p>
+<p>
+  <img src="https://docs.docker.com/build/guide/images/layers.png" alt="image-layers">
+
+</p>
+<p>镜像是多层存储，每一层的东西并不会在下一层被删除，会一直跟随着镜像。</p>
+<p>深入理解可以参考<a href="https://docs.docker.com/build/guide/layers/">官方文档</a></p>
+<h3 id="from-指定基础镜像">FROM 指定基础镜像</h3>
+<p>所谓定制镜像，那一定是以一个镜像为基础，在其上进行定制。</p>
+<p>例如以下dockerfile 指定了 ubuntu 22.04 作为基础镜像，后续的安装命令都将基于 ubuntu 22.04</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">FROM</span><span style="color:#d14"> ubuntu:22.04</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span>...<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="run-执行命令">RUN 执行命令</h3>
+<p><code>RUN</code> 指令是用来执行命令行命令的。由于命令行的强大能力，<code>RUN</code> 指令在定制镜像时是最常用的指令之一。</p>
+<p>以下 <code>RUN</code> 命令在基础镜像的基础上安装了 vim 软件</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>RUN apt update <span style="color:#000;font-weight:bold">&amp;&amp;</span> apt install vim
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>前面我们提到，镜像是多层存储，每一层的东西并不会在下一层被删除，会一直跟随着镜像。 因此镜像构建时，一定要确保每一层只添加真正需要添加的东西，任何无关的东西都应该清理掉。</p>
+<p>因此我们的 <code>RUN</code> 命令可以优化成以下方式</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>RUN apt-get update <span style="color:#000;font-weight:bold">&amp;&amp;</span> apt-get install -y --no-install-recommends <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    curl <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    vim <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    iputils-ping <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    telnet <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    netcat-traditional <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    dnsutils <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    traceroute <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    net-tools <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    <span style="color:#000;font-weight:bold">&amp;&amp;</span> apt-get clean <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    <span style="color:#000;font-weight:bold">&amp;&amp;</span> rm -rf /var/lib/apt/lists/*
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到，命令最后我们使用 <code>apt-get clean</code> 和 <code>rm</code> 命令删除了一些无用的缓存。</p>
+<h3 id="dockerfile-指令详解">Dockerfile 指令详解</h3>
+<p><code>RUN</code> 命令可以让我们定制化来自 <code>FROM</code> 的基础镜像。如果我们想向镜像中复制文件、配置自定义的启动命令、设置环境变量以及创建用户等更复杂的操作，我们该如何实现呢？</p>
+<p>可以直接参考 <a href="https://yeasy.gitbook.io/docker_practice/image/dockerfile">Docker — 从入门到实践|Dockerfile 指令详解</a></p>
+<h3 id="构建镜像">构建镜像</h3>
+<p>我们知道，Dockerfile 定义了镜像最终的形态，那么如何构建镜像呢</p>
+<p>我们在 Dockerfile 文件所在目录执行：</p>
+<pre tabindex="0"><code>$ docker build -t ubuntu:22.04-vim .
+Sending build context to Docker daemon 2.048 kB
+Step 1 : FROM ubuntu:22.04
+ ---&gt; e43d811ce2f4
+Step 2 : RUN apt-get update ...
+ ---&gt; Running in 9cdc27646c7b
+ ---&gt; 44aa4490ce2c
+Removing intermediate container 9cdc27646c7b
+Successfully built 44aa4490ce2c
+</code></pre><p>这里我们使用了 docker build 命令进行镜像构建。其格式为</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>docker build <span style="color:#000;font-weight:bold">[</span>选项<span style="color:#000;font-weight:bold">]</span> &lt;上下文路径/URL/-&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在这里我们指定了最终镜像的名称 <code>-t ubuntu:22.04-vim</code>，构建成功后，我们可以像之前运行 <code>ubuntu:22.04</code> 那样来运行这个镜像，并且可以使用 vim 操作文件。</p>
+<h2 id="访问仓库">访问仓库</h2>
+<h3 id="dockerhub">dockerhub</h3>
+<p>参考 <a href="https://yeasy.gitbook.io/docker_practice/repository/dockerhub">Docker — 从入门到实践|Dockerhub</a></p>
+<h3 id="自动构建镜像">自动构建镜像</h3>
+<p>使用 github action 自动构建镜像</p>
+<p>TODO： 待补充</p>
+<p>参考</p>
+<ul>
+<li>git操作</li>
+<li>github action</li>
+</ul>
+<h2 id="参考">参考</h2>
+<p>本文仅仅简单介绍了 docker 的使用方式，详细内容可参考以下文档。</p>
+<ul>
+<li><a href="https://docs.docker.com/get-docker/">docker 官方文档</a></li>
+<li><a href="https://yeasy.gitbook.io/docker_practice/introduction">Docker — 从入门到实践</a></li>
+<li><a href="https://github.com/y0ngb1n/dockerized?tab=readme-ov-file">dockerized</a></li>
+<li><a href="https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6">Docker Hub 镜像加速器列表</a></li>
+</ul>
+
+
+    </div>
+    <nav class="hide-on-mobile section-nav">
+        <nav id="TableOfContents">
+  <ol>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#docker-安装">docker 安装</a>
+      <ol>
+        <li><a href="#使用非-root-使用-docker">使用非 root 使用 docker</a></li>
+        <li><a href="#镜像加速">镜像加速</a></li>
+      </ol>
+    </li>
+    <li><a href="#获取镜像">获取镜像</a></li>
+    <li><a href="#操作容器">操作容器</a>
+      <ol>
+        <li><a href="#启动一个-bash-终端">启动一个 bash 终端</a></li>
+      </ol>
+    </li>
+    <li><a href="#存储">存储</a>
+      <ol>
+        <li><a href="#挂载一个主机目录作为数据卷">挂载一个主机目录作为数据卷</a></li>
+      </ol>
+    </li>
+    <li><a href="#使用-dockerfile-定制镜像">使用 Dockerfile 定制镜像</a>
+      <ol>
+        <li><a href="#from-指定基础镜像">FROM 指定基础镜像</a></li>
+        <li><a href="#run-执行命令">RUN 执行命令</a></li>
+        <li><a href="#dockerfile-指令详解">Dockerfile 指令详解</a></li>
+        <li><a href="#构建镜像">构建镜像</a></li>
+      </ol>
+    </li>
+    <li><a href="#访问仓库">访问仓库</a>
+      <ol>
+        <li><a href="#dockerhub">dockerhub</a></li>
+        <li><a href="#自动构建镜像">自动构建镜像</a></li>
+      </ol>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ol>
+</nav>
+    </nav>
+</div>
+<div class="post">
+    <hr class="footer-separator" />
+<div class="tags">
+    
+    
+    <ul class="flat">
+        
+        
+        <li class="tag-li"><a href="/tags/docker">Docker</a>
+        </li>
+        
+        
+        <li class="tag-li"><a href="/tags/container">Container</a>
+        </li>
+        
+    </ul>
+    
+    
+</div>
+
+
+<div class="back">
+    <a href="https://github.com/linuzb/linuzb-blog/blob/master/content/posts/docker-doc.md" title="github"><i
+            data-feather="github"></i> Edit this on GitHub</a>
+</div>
+
+
+<div class="back">
+    <a href="https://linuzb.github.io/"><span aria-hidden="true">← Back</span></a>
+</div>
+
+
+<div class="back">
+    
+    
+    Next time, we'll talk about <i>"10 Reasons why gcc SHOULD be re-written in JavaScript - You won&#39;t believe #8!"</i>
+    
+    
+</div>
+
+</div>
+
+	</div>
+	
+
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div>2024  © Copyright notice </div>
+		
+	</nav>
+</div><script>feather.replace()</script>
+	
+	<script>
+    var enableTruncate =  true 
+    var filterDepth = false;
+    const MAX_DEPTH = 9; 
+
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        const observerForTableOfContentActiveState = new IntersectionObserver(entries => {
+            entries.reverse().forEach(entry => {
+                const id = entry.target.getAttribute('id');
+                if (entry.intersectionRatio > 0) {
+                    var selected = document.querySelectorAll(`nav li a[href="#${id}"]`)
+                    if (selected != null) {
+                        selected.forEach(s => {
+                            if (s != null) {
+                                var depth = getDepth(s.parentElement);
+                                if (filterDepth && depth <= MAX_DEPTH) {
+                                    clearActiveStatesInTableOfContents();
+                                    s.parentElement.classList.add('active')
+                                }
+                            } else if (!filterDepth) {
+                                clearActiveStatesInTableOfContents();
+                                s.parentElement.classList.add('active');
+                            }
+                        }
+                        )
+                    }
+
+                }
+            });
+        });
+        document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]').forEach((section) => {
+            observerForTableOfContentActiveState.observe(section);
+        });
+
+    });
+
+    
+    function isVisible(elem) {
+        if (!(elem instanceof Element)) return false; 
+        const style = getComputedStyle(elem);
+        if (style.display === 'none') return false;
+        if (style.visibility !== 'visible') return false;
+        if (style.opacity < 0.1) return false;
+        if (elem.offsetWidth + elem.offsetHeight + elem.getBoundingClientRect().height +
+            elem.getBoundingClientRect().width === 0) {
+            return false;
+        }
+        const elemCenter = {
+            x: elem.getBoundingClientRect().left + elem.offsetWidth / 2,
+            y: elem.getBoundingClientRect().top + elem.offsetHeight / 2
+        };
+        if (elemCenter.x < 0) return false;
+        if (elemCenter.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
+        if (elemCenter.y < 0) return false;
+        if (elemCenter.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
+        let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
+        do {
+            if (pointContainer === elem) return true;
+        } while (pointContainer = pointContainer.parentNode);
+        return false;
+    }
+
+
+    function clearActiveStatesInTableOfContents() {
+        document.querySelectorAll('nav li').forEach((section) => {
+            section.classList.remove('active');
+        });
+    }
+
+    function getDepth(parentElement) {
+        var depth = 0;
+        while (parentElement !== null && parentElement.tagName.toLowerCase() !== 'ul') {
+            depth++;
+            parentElement = parentElement.parentElement;
+        }
+        return depth;
+    }
+
+    function navItems() {
+        
+        var nestedListItems = document.querySelectorAll('nav nav li a');
+        return Array.from(nestedListItems).filter(listItem =>
+            listItem.href != null && listItem.hash.startsWith("#")
+        )
+    }
+
+    function lasItemInNavBarVisible() {
+        var lastItem = navItems().slice(-1)[0]
+        return isVisible(lastItem)
+    }
+
+
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!enableTruncate) return;
+        var navBar = navItems()
+        console.log(navBar)
+        if (!lasItemInNavBarVisible()) {
+            filterDepth = true;
+            
+            navBar.forEach(function (listItem) {
+                var depth = getDepth(listItem.parentElement);
+
+                if (depth > MAX_DEPTH) {
+                    listItem.parentElement.classList.add('depth-nested');
+                }
+            });
+        }
+
+    });
+
+</script>
+
+	
+</body>
+
+</html>
