@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://linuzb.github.io/2024/04/kubernetes-nfs-provider/</loc>
+    <lastmod>2024-04-29T10:47:07+08:00</lastmod>
+  </url><url>
+    <loc>https://linuzb.github.io/</loc>
+    <lastmod>2024-04-29T10:47:07+08:00</lastmod>
+  </url><url>
+    <loc>https://linuzb.github.io/posts/</loc>
+    <lastmod>2024-04-29T10:47:07+08:00</lastmod>
+  </url><url>
     <loc>https://linuzb.github.io/tags/docker/</loc>
     <lastmod>2024-04-28T16:33:37+08:00</lastmod>
   </url><url>
@@ -18,12 +27,6 @@
     <lastmod>2024-04-28T16:33:37+08:00</lastmod>
   </url><url>
     <loc>https://linuzb.github.io/tags/kubernetes/</loc>
-    <lastmod>2024-04-28T16:33:37+08:00</lastmod>
-  </url><url>
-    <loc>https://linuzb.github.io/</loc>
-    <lastmod>2024-04-28T16:33:37+08:00</lastmod>
-  </url><url>
-    <loc>https://linuzb.github.io/posts/</loc>
     <lastmod>2024-04-28T16:33:37+08:00</lastmod>
   </url><url>
     <loc>https://linuzb.github.io/tags/pycharm/</loc>

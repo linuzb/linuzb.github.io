@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>© Copyright notice</copyright>
-    <lastBuildDate>Sun, 28 Apr 2024 16:33:37 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 29 Apr 2024 10:47:07 +0800</lastBuildDate>
     <atom:link href="https://linuzb.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kubernetes Nfs Provider</title>
+      <link>https://linuzb.github.io/2024/04/kubernetes-nfs-provider/</link>
+      <pubDate>Mon, 29 Apr 2024 10:47:07 +0800</pubDate>
+      <guid>https://linuzb.github.io/2024/04/kubernetes-nfs-provider/</guid>
+      <description>前言 本文介绍如何使用 nfs 网络存储为 kubernetes 提供动态的PV创建。&#xA;本文使用的环境&#xA;操作系统 主机IP 数据存储目录 Ubuntu 172.16.0.100/24 /data/nfs 部署 step1. 在宿主机部署 NFS 服务 1 2 3 sudo apt update # 服务端 sudo apt install nfs-kernel-server step2. 创建共享目录 创建目录/data/nfs&#xA;1 mkdir -p /data/nfs step3. 宿主机配置 NFS export 1 echo -e &amp;#34;/data/nfs\t172.16.0.100/24(rw,sync,no_subtree_check,no_root_squash)&amp;#34; | sudo tee -a /etc/exports 配置完成后重启 nfs server&#xA;1 sudo systemctl restart nfs-kernel-server step4. 测试 nfs 服务可用 1 /sbin/showmount -e 172.16.0.100 部署 NFS Provider 使用helm 部署</description>
+    </item>
     <item>
       <title>Jupyterhub Userguide</title>
       <link>https://linuzb.github.io/2024/04/jupyterhub-userguide/</link>

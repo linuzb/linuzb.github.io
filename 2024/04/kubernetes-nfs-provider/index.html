@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Kubernetes Nfs Provider - Linuzb&#39; 的博客</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	
+  <meta itemprop="name" content="Kubernetes Nfs Provider">
+  <meta itemprop="description" content="前言 本文介绍如何使用 nfs 网络存储为 kubernetes 提供动态的PV创建。
+本文使用的环境
+操作系统 主机IP 数据存储目录 Ubuntu 172.16.0.100/24 /data/nfs 部署 step1. 在宿主机部署 NFS 服务 1 2 3 sudo apt update # 服务端 sudo apt install nfs-kernel-server step2. 创建共享目录 创建目录/data/nfs
+1 mkdir -p /data/nfs step3. 宿主机配置 NFS export 1 echo -e &#34;/data/nfs\t172.16.0.100/24(rw,sync,no_subtree_check,no_root_squash)&#34; | sudo tee -a /etc/exports 配置完成后重启 nfs server
+1 sudo systemctl restart nfs-kernel-server step4. 测试 nfs 服务可用 1 /sbin/showmount -e 172.16.0.100 部署 NFS Provider 使用helm 部署">
+  <meta itemprop="datePublished" content="2024-04-29T10:47:07+08:00">
+  <meta itemprop="dateModified" content="2024-04-29T10:47:07+08:00">
+  <meta itemprop="wordCount" content="247"><meta property="og:url" content="https://linuzb.github.io/2024/04/kubernetes-nfs-provider/">
+  <meta property="og:site_name" content="Linuzb&#39; 的博客">
+  <meta property="og:title" content="Kubernetes Nfs Provider">
+  <meta property="og:description" content="前言 本文介绍如何使用 nfs 网络存储为 kubernetes 提供动态的PV创建。
+本文使用的环境
+操作系统 主机IP 数据存储目录 Ubuntu 172.16.0.100/24 /data/nfs 部署 step1. 在宿主机部署 NFS 服务 1 2 3 sudo apt update # 服务端 sudo apt install nfs-kernel-server step2. 创建共享目录 创建目录/data/nfs
+1 mkdir -p /data/nfs step3. 宿主机配置 NFS export 1 echo -e &#34;/data/nfs\t172.16.0.100/24(rw,sync,no_subtree_check,no_root_squash)&#34; | sudo tee -a /etc/exports 配置完成后重启 nfs server
+1 sudo systemctl restart nfs-kernel-server step4. 测试 nfs 服务可用 1 /sbin/showmount -e 172.16.0.100 部署 NFS Provider 使用helm 部署">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-04-29T10:47:07+08:00">
+    <meta property="article:modified_time" content="2024-04-29T10:47:07+08:00">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Kubernetes Nfs Provider">
+<meta name="twitter:description" content="前言 本文介绍如何使用 nfs 网络存储为 kubernetes 提供动态的PV创建。
+本文使用的环境
+操作系统 主机IP 数据存储目录 Ubuntu 172.16.0.100/24 /data/nfs 部署 step1. 在宿主机部署 NFS 服务 1 2 3 sudo apt update # 服务端 sudo apt install nfs-kernel-server step2. 创建共享目录 创建目录/data/nfs
+1 mkdir -p /data/nfs step3. 宿主机配置 NFS export 1 echo -e &#34;/data/nfs\t172.16.0.100/24(rw,sync,no_subtree_check,no_root_squash)&#34; | sudo tee -a /etc/exports 配置完成后重启 nfs server
+1 sudo systemctl restart nfs-kernel-server step4. 测试 nfs 服务可用 1 /sbin/showmount -e 172.16.0.100 部署 NFS Provider 使用helm 部署">
+<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/main.css" />
+
+        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://linuzb.github.io/css/dark.css" />
+
+	<script src="https://linuzb.github.io/js/feather.min.js"></script>
+	
+		<script src="https://linuzb.github.io/js/main.js"></script>
+</head>
+
+
+<body>
+
+
+	
+	<div class="container wrapper">
+		<div class="header">
+	
+	<h1 class="site-title"><a href="https://linuzb.github.io/">Linuzb&#39; 的博客</a></h1>
+	<div class="site-description"><p>记录学习点滴</p><nav class="nav social">
+			<ul class="flat"><li><a href="https://github.com/linuzb" title="Github"><i data-feather="github"></i></a></li><li><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></li><span class="scheme-toggle"><a href="#" id="scheme-toggle"></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags &amp; Stats</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post">
+    <div class="post-header">
+    
+    <div class="meta">
+        <div class="date">
+            <span class="day">29</span>
+            <span class="rest">Apr 2024</span>
+        </div>
+    </div>
+    
+    <div class="matter">
+        <h1 class="title">Kubernetes Nfs Provider</h1>
+    </div>
+</div>
+
+
+    
+    
+    <h2 id="前言">前言</h2>
+<p>本文介绍如何使用 nfs 网络存储为 kubernetes 提供动态的PV创建。</p>
+<p>本文使用的环境</p>
+<table>
+<thead>
+<tr>
+<th>操作系统</th>
+<th>主机IP</th>
+<th>数据存储目录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ubuntu</td>
+<td>172.16.0.100/24</td>
+<td>/data/nfs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="部署">部署</h2>
+<h3 id="step1-在宿主机部署-nfs-服务">step1. 在宿主机部署 NFS 服务</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># 服务端</span>
+</span></span><span style="display:flex;"><span>sudo apt install nfs-kernel-server
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="step2-创建共享目录">step2. 创建共享目录</h3>
+<p>创建目录<code>/data/nfs</code></p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>mkdir -p /data/nfs
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="step3-宿主机配置-nfs-export">step3. 宿主机配置 NFS export</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#0086b3">echo</span> -e <span style="color:#d14">&#34;/data/nfs\t172.16.0.100/24(rw,sync,no_subtree_check,no_root_squash)&#34;</span> | sudo tee -a /etc/exports
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置完成后重启 nfs server</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo systemctl restart nfs-kernel-server
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="step4-测试-nfs-服务可用">step4. 测试 nfs 服务可用</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/sbin/showmount -e 172.16.0.100
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="部署-nfs-provider">部署 NFS Provider</h2>
+<p>使用helm 部署</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>helm upgrade --install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>  --set nfs.server<span style="color:#000;font-weight:bold">=</span>172.16.0.100 <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>  --set nfs.path<span style="color:#000;font-weight:bold">=</span>/data/nfs <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>  --set storageClass.onDelete<span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">true</span> <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>  --set image.repository<span style="color:#000;font-weight:bold">=</span>registry.cn-hangzhou.aliyuncs.com/linuzb/nfs-subdir-external-provisioner
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>nfs.server</code> 使用部署 nfs 的宿主机ip，本文是 <code>172.16.0.100</code></li>
+<li><code>nfs.path</code> 使用部署 nfs 的宿主机共享目录，本文是 <code>/data/nfs</code></li>
+</ul>
+<h2 id="使用">使用</h2>
+<h3 id="获取-storageclass-名字">获取 storageClass 名字</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl get sc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="创建-pvc">创建 pvc</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#000080">apiVersion</span>:<span style="color:#bbb"> </span>v1<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">kind</span>:<span style="color:#bbb"> </span>PersistentVolumeClaim<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">name</span>:<span style="color:#bbb"> </span>task-pv-claim<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">spec</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">storageClassName</span>:<span style="color:#bbb"> </span>nfs-client<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">accessModes</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- ReadWriteMany<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">resources</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">requests</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#000080">storage</span>:<span style="color:#bbb"> </span>3Gi<span style="color:#bbb">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中</p>
+<ul>
+<li><code>storageClassName</code> 使用的就是 nfs 的 storageclass 名字 <code>nfs-client</code></li>
+</ul>
+<h3 id="pod-挂载-pvc">pod 挂载 pvc</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#000080">apiVersion</span>:<span style="color:#bbb"> </span>v1<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">kind</span>:<span style="color:#bbb"> </span>Pod<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">name</span>:<span style="color:#bbb"> </span>task-pv-pod<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">spec</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">volumes</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- <span style="color:#000080">name</span>:<span style="color:#bbb"> </span>task-pv-storage<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#000080">persistentVolumeClaim</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000080">claimName</span>:<span style="color:#bbb"> </span>task-pv-claim<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">containers</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- <span style="color:#000080">name</span>:<span style="color:#bbb"> </span>task-pv-container<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#000080">image</span>:<span style="color:#bbb"> </span>nginx<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#000080">ports</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>- <span style="color:#000080">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#099">80</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#000080">name</span>:<span style="color:#bbb"> </span><span style="color:#d14">&#34;http-server&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#000080">volumeMounts</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>- <span style="color:#000080">mountPath</span>:<span style="color:#bbb"> </span><span style="color:#d14">&#34;/usr/share/nginx/html&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#000080">name</span>:<span style="color:#bbb"> </span>task-pv-storage<span style="color:#bbb">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>对 Pod 而言，PersistentVolumeClaim 就是一个存储卷。</p>
+<h2 id="参考">参考：</h2>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nfs-mount-on-ubuntu-20-04#step-2-creating-the-share-directories-on-the-host">How To Set Up an NFS Mount on Ubuntu 20.04 | DigitalOcean</a></li>
+<li><a href="https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner">kubernetes-sigs/nfs-subdir-external-provisioner: Dynamic sub-dir volume provisioner on a remote NFS server. (github.com)</a></li>
+<li><a href="https://hbayraktar.medium.com/how-to-setup-dynamic-nfs-provisioning-in-a-kubernetes-cluster-cbf433b7de29">How to Setup Dynamic NFS Provisioning in a Kubernetes Cluster | by Hakan Bayraktar | Medium</a></li>
+</ul>
+
+    <hr class="footer-separator" />
+<div class="tags">
+    
+    
+    
+</div>
+
+
+<div class="back">
+    <a href="https://github.com/linuzb/linuzb-blog/blob/master/content/posts/kubernetes-nfs-provider.md" title="github"><i
+            data-feather="github"></i> Edit this on GitHub</a>
+</div>
+
+
+<div class="back">
+    <a href="https://linuzb.github.io/"><span aria-hidden="true">← Back</span></a>
+</div>
+
+
+<div class="back">
+    
+    
+    Next time, we'll talk about <i>"10 Reasons why gcc SHOULD be re-written in JavaScript - You won&#39;t believe #8!"</i>
+    
+    
+</div>
+
+</div>
+
+	</div>
+	
+
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div>2024  © Copyright notice </div>
+		
+	</nav>
+</div><script>feather.replace()</script>
+	
+</body>
+
+</html>
