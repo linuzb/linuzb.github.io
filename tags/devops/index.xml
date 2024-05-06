@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Github Action on Linuzb&#39; 的博客</title>
-    <link>https://linuzb.github.io/tags/github-action/</link>
-    <description>Recent content in Github Action on Linuzb&#39; 的博客</description>
+    <title>DevOps on Linuzb&#39; 的博客</title>
+    <link>https://linuzb.github.io/tags/devops/</link>
+    <description>Recent content in DevOps on Linuzb&#39; 的博客</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>© Copyright notice</copyright>
     <lastBuildDate>Mon, 06 May 2024 10:01:18 +0800</lastBuildDate>
-    <atom:link href="https://linuzb.github.io/tags/github-action/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://linuzb.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Github Action 简明教程</title>
       <link>https://linuzb.github.io/2024/05/github-action-%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</link>
       <pubDate>Mon, 06 May 2024 10:01:18 +0800</pubDate>
       <guid>https://linuzb.github.io/2024/05/github-action-%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</guid>
       <description>前言 本文的目的是介绍一种自动化的构建、测试、部署流程。&#xA;我们在开发软件时，常常需要构建环境、编译、测试以及部署，这些工作都是简单重复的工作，一旦我们的软件及环境复杂，这些工作就会变成一个重复且枯燥的过程。例如，当我们使用了 Docker 之后，我们构建环境就变成了一个 docker build 的过程。每当我们对环境有所修改，我们都需要重新 docker build 一次。每当我们修改一次代码，都需要忍受长时间的编译和测试。 这些工作都有标准的命令，我们是否可以写一个脚本，每当我们对代码进行修改，就可以自动执行以上工作呢？ 当然可以，不过 Github Action 就是这么一个平台，通过 Github Action 我们可以自定义修改代码之后的工作流程（构建镜像、编译、测试和部署等）。&#xA;感兴趣的可以搜索下 DevOps 和 CI/CD(持续集成和持续部署)。这是一种软件开发理念，这里我们不做过多介绍，接下来的内容是 CI/CD 的一种实现。&#xA;这里看一下 Github Action官方定义&#xA;GitHub Actions 是一种持续集成和持续交付 (CI/CD) 平台，可用于自动执行生成、测试和部署管道。 您可以创建工作流程来构建和测试存储库的每个拉取请求，或将合并的拉取请求部署到生产环境。&#xA;Github Action 的组件 我们可以配置 Github Action workflow(工作流)，当仓库中发生特定的事件时可以触发该工作流。如下图所示，下图即为一个工作流，一个工作流包含多个作业，这些作业可以并行可以串行。每个作业中运行了我们定义的脚本（例如docker build、编译、测试等）。&#xA;GitHub Actions 主要有以下几个概念&#xA;Workflows：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。 Event：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。 Jobs：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。 Steps：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。 Actions：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。 Runners：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。 快速入门 自动构建 docker 镜像并推送到 dockerhub 准备 注册 Dockerhub（或者其他镜像中心） 将 Dockerhub 的用户名密码添加到 github action secret中。这一步的操作是将用户名密码放到一个 github action 可以读取的配置中，这个配置以 secret 形式保存，仅 github action可见。 在 github 仓库中编写 Dockerfile 添加 Actions 配置文件，这个文件定义了如何使用以上的 Dockerfile 构建镜像 Dockerfile github action 配置 github action 的配置都统一放在 .</description>
-    </item>
-    <item>
-      <title>从零开始在Kubernetes上搭建Jupyterhub</title>
-      <link>https://linuzb.github.io/2024/04/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%9C%A8kubernetes%E4%B8%8A%E6%90%AD%E5%BB%BAjupyterhub/</link>
-      <pubDate>Mon, 29 Apr 2024 15:08:47 +0800</pubDate>
-      <guid>https://linuzb.github.io/2024/04/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%9C%A8kubernetes%E4%B8%8A%E6%90%AD%E5%BB%BAjupyterhub/</guid>
-      <description>前言 Jupyterhub 允许用户通过网页与计算环境交互，用户可以使用浏览器实现在线或者离线的数据分析，从而摆脱本地计算环境的资源限制。有了 JupyterHub，你就可以管理多个用户的 jupyter 服务。&#xA;Kubernetes 是一个容器编排服务。简单来说，Kubernetes 可以管理一个集群（包含多个计算机），我们可以在 kubernetes 上部署应用，这些应用会被 Kubernetes 调度到集群中的某台机器上运行。用户只需要关心应用运行结果，而不必关心资源调度与分配的过程。&#xA;注: Kubernetes 又叫做 k8s, 原因是在 k 和 s 之间有 8 个字母。&#xA;那么我们是否可以将 Jupyterhub 和 Kubernetes 结合，用来支持多用户 jupyter 服务的申请，并且让Kubernetes 实现资源的管理与分配呢。&#xA;实际上，Jupyterhub 官方已经支持，这个项目叫做 Zero to JupyterHub with Kubernetes，感兴趣的可以直接看 jupyterhub 的官方文档。&#xA;本文将基于 Zero to JupyterHub with Kubernetes 官方文档较少的方法，定制一个适合多用户深度学习计算平台。&#xA;概念介绍 这里简单粗浅的介绍一些概念，以便于大家对后续流程的理解&#xA;默认大家已经理解操作系统、进程、存储的概念&#xA;虚拟机就是模拟出来的一台完整的计算机系统。一台电脑利用虚拟机可以模拟出很多机器。但是这里我们并不使用虚拟机，介绍虚拟机是为了引出另一个概念——容器化。&#xA;容器化和虚拟机类似，它也可以在一台机器上模拟出很多计算系统。但是容器化技术更轻量一些，后面我们介绍的多用户环境其实都是容器化技术模拟出来的。感兴趣的可以搜一下容器化和虚拟机的区别。这里我们只需要知道，我们将使用容器化技术为每个用户创建出独立且相互隔离的计算环境。&#xA;如何使用虚拟机想必大家都知道，例如 Vmware、virtualBox 等等。那么如何创建容器呢，那就不得不提大名鼎鼎的 Docker，感兴趣的可以了解一下。不过很遗憾的是，我们没有使用 docker 作为容器化部署的工具，而是使用更轻量更符合云原生标准的 containerd。感兴趣的可以了解一下这两个区别。&#xA;好了，前面介绍的只需要知道，我们将使用容器化技术来实现多用户独立的计算环境。接下来我们将介绍一些 k8s 的概念。&#xA;首先，Pod是 k8s 的最小执行单元。这句话怎么理解呢？如果将 k8s 看作是一个操作系统的话，那么 pod 就是这个操作系统的进程。大家知道进程是操作系统进行资源分配和调度的基本单位。同理，pod 也是 k8s 中资源分配和调度的基本单位。还是优点绕？说白了，pod就是我们前面提到的容器，只不过在 k8s 中叫 pod。一个 pod 就是一个独立的计算环境，可以理解成一台虚拟机。</description>
     </item>
   </channel>
 </rss>

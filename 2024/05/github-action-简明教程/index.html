@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Github Action 简明教程 - Linuzb&#39; 的博客</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	
+  <meta itemprop="name" content="Github Action 简明教程">
+  <meta itemprop="description" content="前言 本文的目的是介绍一种自动化的构建、测试、部署流程。
+我们在开发软件时，常常需要构建环境、编译、测试以及部署，这些工作都是简单重复的工作，一旦我们的软件及环境复杂，这些工作就会变成一个重复且枯燥的过程。例如，当我们使用了 Docker 之后，我们构建环境就变成了一个 docker build 的过程。每当我们对环境有所修改，我们都需要重新 docker build 一次。每当我们修改一次代码，都需要忍受长时间的编译和测试。 这些工作都有标准的命令，我们是否可以写一个脚本，每当我们对代码进行修改，就可以自动执行以上工作呢？ 当然可以，不过 Github Action 就是这么一个平台，通过 Github Action 我们可以自定义修改代码之后的工作流程（构建镜像、编译、测试和部署等）。
+感兴趣的可以搜索下 DevOps 和 CI/CD(持续集成和持续部署)。这是一种软件开发理念，这里我们不做过多介绍，接下来的内容是 CI/CD 的一种实现。
+这里看一下 Github Action官方定义
+GitHub Actions 是一种持续集成和持续交付 (CI/CD) 平台，可用于自动执行生成、测试和部署管道。 您可以创建工作流程来构建和测试存储库的每个拉取请求，或将合并的拉取请求部署到生产环境。
+Github Action 的组件 我们可以配置 Github Action workflow(工作流)，当仓库中发生特定的事件时可以触发该工作流。如下图所示，下图即为一个工作流，一个工作流包含多个作业，这些作业可以并行可以串行。每个作业中运行了我们定义的脚本（例如docker build、编译、测试等）。
+GitHub Actions 主要有以下几个概念
+Workflows：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。 Event：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。 Jobs：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。 Steps：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。 Actions：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。 Runners：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。 快速入门 自动构建 docker 镜像并推送到 dockerhub 准备 注册 Dockerhub（或者其他镜像中心） 将 Dockerhub 的用户名密码添加到 github action secret中。这一步的操作是将用户名密码放到一个 github action 可以读取的配置中，这个配置以 secret 形式保存，仅 github action可见。 在 github 仓库中编写 Dockerfile 添加 Actions 配置文件，这个文件定义了如何使用以上的 Dockerfile 构建镜像 Dockerfile github action 配置 github action 的配置都统一放在 .">
+  <meta itemprop="datePublished" content="2024-05-06T10:01:18+08:00">
+  <meta itemprop="dateModified" content="2024-05-06T10:01:18+08:00">
+  <meta itemprop="wordCount" content="340">
+  <meta itemprop="keywords" content="CI/CD,DevOps,Github Action"><meta property="og:url" content="https://linuzb.github.io/2024/05/github-action-%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/">
+  <meta property="og:site_name" content="Linuzb&#39; 的博客">
+  <meta property="og:title" content="Github Action 简明教程">
+  <meta property="og:description" content="前言 本文的目的是介绍一种自动化的构建、测试、部署流程。
+我们在开发软件时，常常需要构建环境、编译、测试以及部署，这些工作都是简单重复的工作，一旦我们的软件及环境复杂，这些工作就会变成一个重复且枯燥的过程。例如，当我们使用了 Docker 之后，我们构建环境就变成了一个 docker build 的过程。每当我们对环境有所修改，我们都需要重新 docker build 一次。每当我们修改一次代码，都需要忍受长时间的编译和测试。 这些工作都有标准的命令，我们是否可以写一个脚本，每当我们对代码进行修改，就可以自动执行以上工作呢？ 当然可以，不过 Github Action 就是这么一个平台，通过 Github Action 我们可以自定义修改代码之后的工作流程（构建镜像、编译、测试和部署等）。
+感兴趣的可以搜索下 DevOps 和 CI/CD(持续集成和持续部署)。这是一种软件开发理念，这里我们不做过多介绍，接下来的内容是 CI/CD 的一种实现。
+这里看一下 Github Action官方定义
+GitHub Actions 是一种持续集成和持续交付 (CI/CD) 平台，可用于自动执行生成、测试和部署管道。 您可以创建工作流程来构建和测试存储库的每个拉取请求，或将合并的拉取请求部署到生产环境。
+Github Action 的组件 我们可以配置 Github Action workflow(工作流)，当仓库中发生特定的事件时可以触发该工作流。如下图所示，下图即为一个工作流，一个工作流包含多个作业，这些作业可以并行可以串行。每个作业中运行了我们定义的脚本（例如docker build、编译、测试等）。
+GitHub Actions 主要有以下几个概念
+Workflows：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。 Event：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。 Jobs：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。 Steps：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。 Actions：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。 Runners：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。 快速入门 自动构建 docker 镜像并推送到 dockerhub 准备 注册 Dockerhub（或者其他镜像中心） 将 Dockerhub 的用户名密码添加到 github action secret中。这一步的操作是将用户名密码放到一个 github action 可以读取的配置中，这个配置以 secret 形式保存，仅 github action可见。 在 github 仓库中编写 Dockerfile 添加 Actions 配置文件，这个文件定义了如何使用以上的 Dockerfile 构建镜像 Dockerfile github action 配置 github action 的配置都统一放在 .">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-05-06T10:01:18+08:00">
+    <meta property="article:modified_time" content="2024-05-06T10:01:18+08:00">
+    <meta property="article:tag" content="CI/CD">
+    <meta property="article:tag" content="DevOps">
+    <meta property="article:tag" content="Github Action">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Github Action 简明教程">
+<meta name="twitter:description" content="前言 本文的目的是介绍一种自动化的构建、测试、部署流程。
+我们在开发软件时，常常需要构建环境、编译、测试以及部署，这些工作都是简单重复的工作，一旦我们的软件及环境复杂，这些工作就会变成一个重复且枯燥的过程。例如，当我们使用了 Docker 之后，我们构建环境就变成了一个 docker build 的过程。每当我们对环境有所修改，我们都需要重新 docker build 一次。每当我们修改一次代码，都需要忍受长时间的编译和测试。 这些工作都有标准的命令，我们是否可以写一个脚本，每当我们对代码进行修改，就可以自动执行以上工作呢？ 当然可以，不过 Github Action 就是这么一个平台，通过 Github Action 我们可以自定义修改代码之后的工作流程（构建镜像、编译、测试和部署等）。
+感兴趣的可以搜索下 DevOps 和 CI/CD(持续集成和持续部署)。这是一种软件开发理念，这里我们不做过多介绍，接下来的内容是 CI/CD 的一种实现。
+这里看一下 Github Action官方定义
+GitHub Actions 是一种持续集成和持续交付 (CI/CD) 平台，可用于自动执行生成、测试和部署管道。 您可以创建工作流程来构建和测试存储库的每个拉取请求，或将合并的拉取请求部署到生产环境。
+Github Action 的组件 我们可以配置 Github Action workflow(工作流)，当仓库中发生特定的事件时可以触发该工作流。如下图所示，下图即为一个工作流，一个工作流包含多个作业，这些作业可以并行可以串行。每个作业中运行了我们定义的脚本（例如docker build、编译、测试等）。
+GitHub Actions 主要有以下几个概念
+Workflows：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。 Event：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。 Jobs：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。 Steps：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。 Actions：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。 Runners：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。 快速入门 自动构建 docker 镜像并推送到 dockerhub 准备 注册 Dockerhub（或者其他镜像中心） 将 Dockerhub 的用户名密码添加到 github action secret中。这一步的操作是将用户名密码放到一个 github action 可以读取的配置中，这个配置以 secret 形式保存，仅 github action可见。 在 github 仓库中编写 Dockerfile 添加 Actions 配置文件，这个文件定义了如何使用以上的 Dockerfile 构建镜像 Dockerfile github action 配置 github action 的配置都统一放在 .">
+<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/main.css" />
+
+        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://linuzb.github.io/css/dark.css" />
+
+	<script src="https://linuzb.github.io/js/feather.min.js"></script>
+	
+		<script src="https://linuzb.github.io/js/main.js"></script>
+</head>
+
+
+<body>
+
+
+	
+	<div class="container wrapper">
+		<div class="header">
+	
+	<h1 class="site-title"><a href="https://linuzb.github.io/">Linuzb&#39; 的博客</a></h1>
+	<div class="site-description"><p>记录学习点滴</p><nav class="nav social">
+			<ul class="flat"><li><a href="https://github.com/linuzb" title="Github"><i data-feather="github"></i></a></li><li><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></li><span class="scheme-toggle"><a href="#" id="scheme-toggle"></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags &amp; Stats</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post">
+    <div class="post-header">
+    
+    <div class="meta">
+        <div class="date">
+            <span class="day">06</span>
+            <span class="rest">May 2024</span>
+        </div>
+    </div>
+    
+    <div class="matter">
+        <h1 class="title">Github Action 简明教程</h1>
+    </div>
+</div>
+
+
+    
+    
+    <h2 id="前言">前言</h2>
+<p>本文的目的是介绍一种自动化的构建、测试、部署流程。</p>
+<p>我们在开发软件时，常常需要构建环境、编译、测试以及部署，这些工作都是简单重复的工作，一旦我们的软件及环境复杂，这些工作就会变成一个重复且枯燥的过程。例如，当我们使用了 Docker 之后，我们构建环境就变成了一个 docker build 的过程。每当我们对环境有所修改，我们都需要重新 docker build 一次。每当我们修改一次代码，都需要忍受长时间的编译和测试。 这些工作都有标准的命令，我们是否可以写一个脚本，每当我们对代码进行修改，就可以自动执行以上工作呢？ 当然可以，不过 Github Action 就是这么一个平台，通过 Github Action 我们可以自定义修改代码之后的工作流程（构建镜像、编译、测试和部署等）。</p>
+<p>感兴趣的可以搜索下 DevOps 和 CI/CD(持续集成和持续部署)。这是一种软件开发理念，这里我们不做过多介绍，接下来的内容是 CI/CD 的一种实现。</p>
+<p>这里看一下 Github Action官方定义</p>
+<blockquote>
+<p>GitHub Actions 是一种持续集成和持续交付 (CI/CD) 平台，可用于自动执行生成、测试和部署管道。 您可以创建工作流程来构建和测试存储库的每个拉取请求，或将合并的拉取请求部署到生产环境。</p>
+</blockquote>
+<h2 id="github-action-的组件">Github Action 的组件</h2>
+<p>我们可以配置 Github Action workflow(工作流)，当仓库中发生特定的事件时可以触发该工作流。如下图所示，下图即为一个工作流，一个工作流包含多个作业，这些作业可以并行可以串行。每个作业中运行了我们定义的脚本（例如docker build、编译、测试等）。</p>
+<p>
+  <img src="https://docs.github.com/assets/cb-25535/mw-1440/images/help/actions/overview-actions-simple.webp" alt="workflow">
+
+</p>
+<p>GitHub Actions 主要有以下几个概念</p>
+<ul>
+<li><strong>Workflows</strong>：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。</li>
+<li><strong>Event</strong>：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。</li>
+<li><strong>Jobs</strong>：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。</li>
+<li><strong>Steps</strong>：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。</li>
+<li><strong>Actions</strong>：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。</li>
+<li><strong>Runners</strong>：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。</li>
+</ul>
+<h2 id="快速入门">快速入门</h2>
+<h3 id="自动构建-docker-镜像并推送到-dockerhub">自动构建 docker 镜像并推送到 dockerhub</h3>
+<h4 id="准备">准备</h4>
+<ul>
+<li>注册 <a href="https://hub.docker.com/">Dockerhub</a>（或者其他镜像中心）</li>
+<li>将 <a href="https://hub.docker.com/">Dockerhub</a> 的用户名密码添加到 github action secret中。这一步的操作是将用户名密码放到一个 github action 可以读取的配置中，这个配置以 secret 形式保存，仅 github action可见。</li>
+<li>在 github 仓库中编写 Dockerfile</li>
+<li>添加 Actions 配置文件，这个文件定义了如何使用以上的 Dockerfile 构建镜像</li>
+</ul>
+<h4 id="dockerfile">Dockerfile</h4>
+<h4 id="github-action-配置">github action 配置</h4>
+<p>github action 的配置都统一放在 <code>.github/workflows/</code> 目录下，该目录下可以放多个 workflow 配置。</p>
+<p>例如以下 build docker 的配置 <code>.github/workflows/build-docker.yaml</code></p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#000080">name</span>:<span style="color:#bbb"> </span>build_docker<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">on</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#998;font-style:italic"># 提交代码时触发</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">push</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#998;font-style:italic"># 触发条件，以下为与的关系</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#998;font-style:italic"># 1. 向 main 分支或者 feat/ 开头的分支提交代码</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#998;font-style:italic"># 2. 仅当 src/docker/ 目录下的文件有变化</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">branches</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- main<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- feat/**<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">paths</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- <span style="color:#d14">&#39;src/docker/**&#39;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#998;font-style:italic"># 手动触发</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">workflow_dispatch</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">env</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#998;font-style:italic"># 定义环境变量，在下面可以这样用 ${{ env.TARGET_NAMESPACE }}</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">TARGET_NAMESPACE</span>:<span style="color:#bbb"> </span>linuzb<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">jobs</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">build_docker</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">name</span>:<span style="color:#bbb"> </span>Build docker<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">runs-on</span>:<span style="color:#bbb"> </span>ubuntu-latest<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">steps</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#000080">name</span>:<span style="color:#bbb"> </span>Checkout<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000080">uses</span>:<span style="color:#bbb"> </span>actions/checkout@v3<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#000080">name</span>:<span style="color:#bbb"> </span>Set up QEMU<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000080">uses</span>:<span style="color:#bbb"> </span>docker/setup-qemu-action@v2<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#000080">name</span>:<span style="color:#bbb"> </span>Set up Docker Buildx<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000080">uses</span>:<span style="color:#bbb"> </span>docker/setup-buildx-action@v2<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#998;font-style:italic"># 登录到 dockerhub</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#998;font-style:italic"># 需要提前将 DOCKERHUB_USERNAME 和 DOCKERHUB_TOKEN 放到 github action secret 中</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#000080">name</span>:<span style="color:#bbb"> </span>Login to DockerHub<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000080">uses</span>:<span style="color:#bbb"> </span>docker/login-action@v2<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000080">with</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#000080">username</span>:<span style="color:#bbb"> </span>${{ secrets.DOCKERHUB_USERNAME }}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#000080">password</span>:<span style="color:#bbb"> </span>${{ secrets.DOCKERHUB_TOKEN }}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#998;font-style:italic"># 获取 git commit hash 值或者 tag 值，并存储到环境变量 APP_VERSION 中</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#000080">name</span>:<span style="color:#bbb"> </span>Generate App Version<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000080">run</span>:<span style="color:#bbb"> </span>echo APP_VERSION=`git describe --tags --always` &gt;&gt; $GITHUB_ENV<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#000080">name</span>:<span style="color:#bbb"> </span>Build and push<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000080">id</span>:<span style="color:#bbb"> </span>docker_build<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000080">uses</span>:<span style="color:#bbb"> </span>docker/build-push-action@v4<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000080">with</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#998;font-style:italic"># 切换上下文到 Dockerfile 所在目录</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#000080">context</span>:<span style="color:#bbb"> </span>src/docker<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#998;font-style:italic"># 指定 Dockerfile 目录，前面 context 已经制定了dockerfile所在目录，这里可以忽略</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#998;font-style:italic"># file: src/docker/Dockerfile</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#000080">push</span>:<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">true</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#000080">platforms</span>:<span style="color:#bbb"> </span>linux/amd64,linux/arm64<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#000080">tags</span>:<span style="color:#bbb"> </span>|<span style="color:#d14">
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.TARGET_NAMESPACE }}:${{ github.ref_name }}
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.TARGET_NAMESPACE }}:latest</span><span style="color:#bbb">            
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="推荐">推荐</h2>
+<ul>
+<li><a href="https://p3terx.com/archives/ssh-to-the-github-actions-virtual-server-environment.html">SSH 连接到 GitHub Actions 虚拟服务器(VM/VPS)</a></li>
+</ul>
+<h2 id="参考">参考</h2>
+
+    <hr class="footer-separator" />
+<div class="tags">
+    
+    
+    <ul class="flat">
+        
+        
+        <li class="tag-li"><a href="/tags/ci/cd">CI/CD</a>
+        </li>
+        
+        
+        <li class="tag-li"><a href="/tags/devops">DevOps</a>
+        </li>
+        
+        
+        <li class="tag-li"><a href="/tags/github-action">Github Action</a>
+        </li>
+        
+    </ul>
+    
+    
+</div>
+
+
+<div class="back">
+    <a href="https://github.com/linuzb/linuzb-blog/blob/master/content/posts/github-action-guide.md" title="github"><i
+            data-feather="github"></i> Edit this on GitHub</a>
+</div>
+
+
+<div class="back">
+    <a href="https://linuzb.github.io/"><span aria-hidden="true">← Back</span></a>
+</div>
+
+
+<div class="back">
+    
+    
+    Next time, we'll talk about <i>"10 Reasons why gcc SHOULD be re-written in JavaScript - You won&#39;t believe #8!"</i>
+    
+    
+</div>
+
+</div>
+
+	</div>
+	
+
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div>2024  © Copyright notice </div>
+		
+	</nav>
+</div><script>feather.replace()</script>
+	
+</body>
+
+</html>
