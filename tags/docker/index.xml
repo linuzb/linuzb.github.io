@@ -17,6 +17,13 @@
       <description>前言 本文将简单介绍 Docker 的安装与使用过程&#xA;docker 安装 docker 官方文档提供了各个系统的安装方式，参考 Install Docker Engine，但是由于国内网络环境，使用官方方式会比较慢，因此国内环境不推荐这种方式安装。下面我们介绍另一种国内安装方式。&#xA;自动化的安装方式，本节内容源自 清华大学开源镜像站|Docker CE 软件仓库，其他安装方式可以参考该文档。&#xA;Docker 提供了一个自动配置与安装的脚本，支持 Debian、RHEL、SUSE 系列及衍生系统的安装。&#xA;以下内容假定&#xA;您为 root 用户，或有 sudo 权限，或知道 root 密码； 您系统上有 curl 或 wget 1 2 3 4 5 export DOWNLOAD_URL=&amp;#34;https://mirrors.tuna.tsinghua.edu.cn/docker-ce&amp;#34; # 如您使用 curl curl -fsSL https://get.docker.com/ | sh # 如您使用 wget wget -O- https://get.docker.com/ | sh 使用非 root 使用 docker 通过以上方式安装的docker只能通过 root 用户或者 sudo 权限使用。&#xA;接下来我们将配置非 root 用户使用 docker&#xA;创建 docker 用户组 1 sudo groupadd docker 将当前用户添加到 docker 用户组 1 sudo usermod -aG docker $USER 激活用户组配置 1 newgrp docker 测试 docker 命令 1 docker run hello-world 此命令将下载测镜像并在容器中运行。容器运行时，它会打印一条信息并退出。</description>
     </item>
     <item>
+      <title>从零开始在Kubernetes上搭建Jupyterhub</title>
+      <link>https://linuzb.github.io/2024/04/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%9C%A8kubernetes%E4%B8%8A%E6%90%AD%E5%BB%BAjupyterhub/</link>
+      <pubDate>Mon, 29 Apr 2024 15:08:47 +0800</pubDate>
+      <guid>https://linuzb.github.io/2024/04/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%9C%A8kubernetes%E4%B8%8A%E6%90%AD%E5%BB%BAjupyterhub/</guid>
+      <description>前言 Jupyterhub 允许用户通过网页与计算环境交互，用户可以使用浏览器实现在线或者离线的数据分析，从而摆脱本地计算环境的资源限制。有了 JupyterHub，你就可以管理多个用户的 jupyter 服务。&#xA;Kubernetes 是一个容器编排服务。简单来说，Kubernetes 可以管理一个集群（包含多个计算机），我们可以在 kubernetes 上部署应用，这些应用会被 Kubernetes 调度到集群中的某台机器上运行。用户只需要关心应用运行结果，而不必关心资源调度与分配的过程。&#xA;注: Kubernetes 又叫做 k8s, 原因是在 k 和 s 之间有 8 个字母。&#xA;那么我们是否可以将 Jupyterhub 和 Kubernetes 结合，用来支持多用户 jupyter 服务的申请，并且让Kubernetes 实现资源的管理与分配呢。&#xA;实际上，Jupyterhub 官方已经支持，这个项目叫做 Zero to JupyterHub with Kubernetes，感兴趣的可以直接看 jupyterhub 的官方文档。&#xA;本文将基于 Zero to JupyterHub with Kubernetes 官方文档较少的方法，定制一个适合多用户深度学习计算平台。&#xA;概念介绍 这里简单粗浅的介绍一些概念，以便于大家对后续流程的理解&#xA;默认大家已经理解操作系统、进程、存储的概念&#xA;虚拟机就是模拟出来的一台完整的计算机系统。一台电脑利用虚拟机可以模拟出很多机器。但是这里我们并不使用虚拟机，介绍虚拟机是为了引出另一个概念——容器化。&#xA;容器化和虚拟机类似，它也可以在一台机器上模拟出很多计算系统。但是容器化技术更轻量一些，后面我们介绍的多用户环境其实都是容器化技术模拟出来的。感兴趣的可以搜一下容器化和虚拟机的区别。这里我们只需要知道，我们将使用容器化技术为每个用户创建出独立且相互隔离的计算环境。&#xA;如何使用虚拟机想必大家都知道，例如 Vmware、virtualBox 等等。那么如何创建容器呢，那就不得不提大名鼎鼎的 Docker，感兴趣的可以了解一下。不过很遗憾的是，我们没有使用 docker 作为容器化部署的工具，而是使用更轻量更符合云原生标准的 containerd。感兴趣的可以了解一下这两个区别。&#xA;好了，前面介绍的只需要知道，我们将使用容器化技术来实现多用户独立的计算环境。接下来我们将介绍一些 k8s 的概念。&#xA;首先，Pod是 k8s 的最小执行单元。这句话怎么理解呢？如果将 k8s 看作是一个操作系统的话，那么 pod 就是这个操作系统的进程。大家知道进程是操作系统进行资源分配和调度的基本单位。同理，pod 也是 k8s 中资源分配和调度的基本单位。还是优点绕？说白了，pod就是我们前面提到的容器，只不过在 k8s 中叫 pod。一个 pod 就是一个独立的计算环境，可以理解成一台虚拟机。</description>
+    </item>
+    <item>
       <title>Jupyterhub Userguide</title>
       <link>https://linuzb.github.io/2024/04/jupyterhub-userguide/</link>
       <pubDate>Sun, 28 Apr 2024 16:33:37 +0800</pubDate>
