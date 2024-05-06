@@ -12,10 +12,10 @@
 GitHub Actions 是一种持续集成和持续交付 (CI/CD) 平台，可用于自动执行生成、测试和部署管道。 您可以创建工作流程来构建和测试存储库的每个拉取请求，或将合并的拉取请求部署到生产环境。
 Github Action 的组件 我们可以配置 Github Action workflow(工作流)，当仓库中发生特定的事件时可以触发该工作流。如下图所示，下图即为一个工作流，一个工作流包含多个作业，这些作业可以并行可以串行。每个作业中运行了我们定义的脚本（例如docker build、编译、测试等）。
 GitHub Actions 主要有以下几个概念
-Workflows：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。 Event：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。 Jobs：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。 Steps：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。 Actions：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。 Runners：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。 快速入门 自动构建 docker 镜像并推送到 dockerhub 准备 注册 Dockerhub（或者其他镜像中心） 将 Dockerhub 的用户名密码添加到 github action secret中。这一步的操作是将用户名密码放到一个 github action 可以读取的配置中，这个配置以 secret 形式保存，仅 github action可见。 在 github 仓库中编写 Dockerfile 添加 Actions 配置文件，这个文件定义了如何使用以上的 Dockerfile 构建镜像 Dockerfile github action 配置 github action 的配置都统一放在 .">
+Workflows：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。 Event：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。 Jobs：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。 Steps：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。 Actions：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。 Runners：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。 快速入门 本文是一个入门教程，仅起到抛砖引玉的作用，详细概念介绍和使用方法以可见参考文档或者自行搜索。">
   <meta itemprop="datePublished" content="2024-05-06T10:01:18+08:00">
   <meta itemprop="dateModified" content="2024-05-06T10:01:18+08:00">
-  <meta itemprop="wordCount" content="340">
+  <meta itemprop="wordCount" content="529">
   <meta itemprop="keywords" content="CI/CD,DevOps,Github Action"><meta property="og:url" content="https://linuzb.github.io/2024/05/github-action-%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/">
   <meta property="og:site_name" content="Linuzb&#39; 的博客">
   <meta property="og:title" content="Github Action 简明教程">
@@ -26,7 +26,7 @@ Workflows：工作流，可以添加到存储库中的自动化过程。工作�
 GitHub Actions 是一种持续集成和持续交付 (CI/CD) 平台，可用于自动执行生成、测试和部署管道。 您可以创建工作流程来构建和测试存储库的每个拉取请求，或将合并的拉取请求部署到生产环境。
 Github Action 的组件 我们可以配置 Github Action workflow(工作流)，当仓库中发生特定的事件时可以触发该工作流。如下图所示，下图即为一个工作流，一个工作流包含多个作业，这些作业可以并行可以串行。每个作业中运行了我们定义的脚本（例如docker build、编译、测试等）。
 GitHub Actions 主要有以下几个概念
-Workflows：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。 Event：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。 Jobs：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。 Steps：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。 Actions：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。 Runners：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。 快速入门 自动构建 docker 镜像并推送到 dockerhub 准备 注册 Dockerhub（或者其他镜像中心） 将 Dockerhub 的用户名密码添加到 github action secret中。这一步的操作是将用户名密码放到一个 github action 可以读取的配置中，这个配置以 secret 形式保存，仅 github action可见。 在 github 仓库中编写 Dockerfile 添加 Actions 配置文件，这个文件定义了如何使用以上的 Dockerfile 构建镜像 Dockerfile github action 配置 github action 的配置都统一放在 .">
+Workflows：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。 Event：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。 Jobs：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。 Steps：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。 Actions：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。 Runners：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。 快速入门 本文是一个入门教程，仅起到抛砖引玉的作用，详细概念介绍和使用方法以可见参考文档或者自行搜索。">
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -43,7 +43,7 @@ Workflows：工作流，可以添加到存储库中的自动化过程。工作�
 GitHub Actions 是一种持续集成和持续交付 (CI/CD) 平台，可用于自动执行生成、测试和部署管道。 您可以创建工作流程来构建和测试存储库的每个拉取请求，或将合并的拉取请求部署到生产环境。
 Github Action 的组件 我们可以配置 Github Action workflow(工作流)，当仓库中发生特定的事件时可以触发该工作流。如下图所示，下图即为一个工作流，一个工作流包含多个作业，这些作业可以并行可以串行。每个作业中运行了我们定义的脚本（例如docker build、编译、测试等）。
 GitHub Actions 主要有以下几个概念
-Workflows：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。 Event：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。 Jobs：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。 Steps：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。 Actions：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。 Runners：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。 快速入门 自动构建 docker 镜像并推送到 dockerhub 准备 注册 Dockerhub（或者其他镜像中心） 将 Dockerhub 的用户名密码添加到 github action secret中。这一步的操作是将用户名密码放到一个 github action 可以读取的配置中，这个配置以 secret 形式保存，仅 github action可见。 在 github 仓库中编写 Dockerfile 添加 Actions 配置文件，这个文件定义了如何使用以上的 Dockerfile 构建镜像 Dockerfile github action 配置 github action 的配置都统一放在 .">
+Workflows：工作流，可以添加到存储库中的自动化过程。工作流由一个或多个作业组成，可以由事件调度或触发。 Event：事件，触发工作流的特定动作。例如，向存储库提交 pr 或 pull 请求。 Jobs：作业，在同一跑步器上执行的一组步骤。默认情况下，具有多个作业的工作流将并行运行这些作业。 Steps：步骤，可以在作业中运行命令的单个任务。步骤可以是操作，也可以是 shell 命令。作业中的每个步骤都在同一个运行程序上执行，从而允许该作业中的操作彼此共享数据。 Actions：操作是独立的命令，它们被组合成创建作业的步骤。操作是工作流中最小的可移植构建块。你可以创建自己的动作，或者使用 GitHub 社区创建的动作。 Runners：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。 快速入门 本文是一个入门教程，仅起到抛砖引玉的作用，详细概念介绍和使用方法以可见参考文档或者自行搜索。">
 <link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/normalize.css" />
 	<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/main.css" />
 
@@ -59,7 +59,7 @@ Workflows：工作流，可以添加到存储库中的自动化过程。工作�
 
 
 	
-	<div class="container wrapper">
+	<div class="container-wide wrapper">
 		<div class="header">
 	
 	<h1 class="site-title"><a href="https://linuzb.github.io/">Linuzb&#39; 的博客</a></h1>
@@ -92,8 +92,10 @@ Workflows：工作流，可以添加到存储库中的自动化过程。工作�
 </div>
 
 
-		<div class="post">
-    <div class="post-header">
+		
+<div class="article-nav" id="article-nav-id">
+    <div class="post">
+        <div class="post-header">
     
     <div class="meta">
         <div class="date">
@@ -108,9 +110,29 @@ Workflows：工作流，可以添加到存储库中的自动化过程。工作�
 </div>
 
 
-    
-    
-    <h2 id="前言">前言</h2>
+        
+        
+        <aside class="toc" id="static-toc">
+            <header>
+                <h3>Contents</h3>
+            </header>
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#github-action-的组件">Github Action 的组件</a></li>
+    <li><a href="#快速入门">快速入门</a>
+      <ol>
+        <li><a href="#自动构建-docker-镜像并推送到-dockerhub">自动构建 docker 镜像并推送到 dockerhub</a></li>
+      </ol>
+    </li>
+    <li><a href="#推荐">推荐</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ol>
+</nav>
+        </aside>
+        
+
+        <h2 id="前言">前言</h2>
 <p>本文的目的是介绍一种自动化的构建、测试、部署流程。</p>
 <p>我们在开发软件时，常常需要构建环境、编译、测试以及部署，这些工作都是简单重复的工作，一旦我们的软件及环境复杂，这些工作就会变成一个重复且枯燥的过程。例如，当我们使用了 Docker 之后，我们构建环境就变成了一个 docker build 的过程。每当我们对环境有所修改，我们都需要重新 docker build 一次。每当我们修改一次代码，都需要忍受长时间的编译和测试。 这些工作都有标准的命令，我们是否可以写一个脚本，每当我们对代码进行修改，就可以自动执行以上工作呢？ 当然可以，不过 Github Action 就是这么一个平台，通过 Github Action 我们可以自定义修改代码之后的工作流程（构建镜像、编译、测试和部署等）。</p>
 <p>感兴趣的可以搜索下 DevOps 和 CI/CD(持续集成和持续部署)。这是一种软件开发理念，这里我们不做过多介绍，接下来的内容是 CI/CD 的一种实现。</p>
@@ -134,6 +156,8 @@ Workflows：工作流，可以添加到存储库中的自动化过程。工作�
 <li><strong>Runners</strong>：运行器，安装了 GitHub Actions 运行器应用程序的服务器。。Github 托管的运行器基于 Ubuntu Linux、Microsoft Windows 和 macOS，工作流中的每个作业都在一个新的虚拟环境中运行。</li>
 </ul>
 <h2 id="快速入门">快速入门</h2>
+<p>本文是一个入门教程，仅起到抛砖引玉的作用，详细概念介绍和使用方法以可见参考文档或者自行搜索。</p>
+<p>这里介绍一些例子快速上手。</p>
 <h3 id="自动构建-docker-镜像并推送到-dockerhub">自动构建 docker 镜像并推送到 dockerhub</h3>
 <h4 id="准备">准备</h4>
 <ul>
@@ -143,6 +167,87 @@ Workflows：工作流，可以添加到存储库中的自动化过程。工作�
 <li>添加 Actions 配置文件，这个文件定义了如何使用以上的 Dockerfile 构建镜像</li>
 </ul>
 <h4 id="dockerfile">Dockerfile</h4>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Copyright (c) Jupyter Development Team.</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#998;font-style:italic"># Distributed under the terms of the Modified BSD License.</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">ARG</span> <span style="color:#008080">REGISTRY</span><span style="color:#000;font-weight:bold">=</span>quay.io<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">ARG</span> <span style="color:#008080">OWNER</span><span style="color:#000;font-weight:bold">=</span>jupyter
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">ARG</span> <span style="color:#008080">BASE_CONTAINER</span><span style="color:#000;font-weight:bold">=</span><span style="color:#008080">$REGISTRY</span>/<span style="color:#008080">$OWNER</span>/scipy-notebook<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">FROM</span><span style="color:#d14"> $BASE_CONTAINER</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">LABEL</span> <span style="color:#008080">maintainer</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Jupyter Project &lt;jupyter@googlegroups.com&gt;&#34;</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#998;font-style:italic"># Fix: https://github.com/hadolint/hadolint/wiki/DL4006</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#998;font-style:italic"># Fix: https://github.com/koalaman/shellcheck/wiki/SC3014</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">SHELL</span> [<span style="color:#d14">&#34;/bin/bash&#34;</span>, <span style="color:#d14">&#34;-o&#34;</span>, <span style="color:#d14">&#34;pipefail&#34;</span>, <span style="color:#d14">&#34;-c&#34;</span>]<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">USER</span><span style="color:#d14"> root</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">RUN</span> apt-get update --yes <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    <span style="color:#000;font-weight:bold">&amp;&amp;</span> apt-get install --yes --no-install-recommends <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    wget <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    curl <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    vim <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    git <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    <span style="color:#000;font-weight:bold">&amp;&amp;</span> apt-get clean <span style="color:#000;font-weight:bold">&amp;&amp;</span> rm -rf /var/lib/apt/lists/*<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#998;font-style:italic"># Installation de Code Server et server-proxy/vscode-proxy pour intégrer Code dans JupyterLab</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#998;font-style:italic"># Install VSCode extensions</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">ENV</span> <span style="color:#008080">CODE_VERSION</span><span style="color:#000;font-weight:bold">=</span><span style="color:#099">4</span>.22.1<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">RUN</span> curl -fOL https://github.com/coder/code-server/releases/download/v<span style="color:#008080">$CODE_VERSION</span>/code-server_<span style="color:#d14">${</span><span style="color:#008080">CODE_VERSION</span><span style="color:#d14">}</span>_amd64.deb <span style="color:#000;font-weight:bold">&amp;&amp;</span> <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    dpkg -i code-server_<span style="color:#d14">${</span><span style="color:#008080">CODE_VERSION</span><span style="color:#d14">}</span>_amd64.deb <span style="color:#000;font-weight:bold">&amp;&amp;</span> <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    rm -f code-server_<span style="color:#d14">${</span><span style="color:#008080">CODE_VERSION</span><span style="color:#d14">}</span>_amd64.deb <span style="color:#000;font-weight:bold">&amp;&amp;</span> <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    <span style="color:#008080">EXT_LIST</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;ms-python.python ms-python.debugpy zhuangtongfa.material-theme&#34;</span> <span style="color:#000;font-weight:bold">&amp;&amp;</span> <span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>    <span style="color:#000;font-weight:bold">for</span> EXT in <span style="color:#008080">$EXT_LIST</span>; <span style="color:#000;font-weight:bold">do</span> code-server --install-extension <span style="color:#008080">$EXT</span>; <span style="color:#000;font-weight:bold">done</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">USER</span><span style="color:#d14"> ${NB_UID}</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#998;font-style:italic"># https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#dockerfiles</span><span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">ENV</span> NVIDIA_VISIBLE_DEVICES all<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span><span style="display:flex;"><span><span style="color:#a61717;background-color:#e3d2d2"></span><span style="color:#000;font-weight:bold">ENV</span> NVIDIA_DRIVER_CAPABILITIES compute,utility<span style="color:#a61717;background-color:#e3d2d2">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>如何编写 Dockerfile 可以参考 <a href="https://linuzb.github.io/2024/04/docker-%E5%85%A5%E9%97%A8%E6%96%87%E6%A1%A3/">docker 教程</a></p>
 <h4 id="github-action-配置">github action 配置</h4>
 <p>github action 的配置都统一放在 <code>.github/workflows/</code> 目录下，该目录下可以放多个 workflow 配置。</p>
 <p>例如以下 build docker 的配置 <code>.github/workflows/build-docker.yaml</code></p>
@@ -271,7 +376,33 @@ Workflows：工作流，可以添加到存储库中的自动化过程。工作�
 <li><a href="https://p3terx.com/archives/ssh-to-the-github-actions-virtual-server-environment.html">SSH 连接到 GitHub Actions 虚拟服务器(VM/VPS)</a></li>
 </ul>
 <h2 id="参考">参考</h2>
+<ul>
+<li>示例项目 <a href="https://github.com/linuzb/devcontainer">linuzb/devcontainer</a></li>
+<li><a href="https://docs.github.com/zh/actions/quickstart">GitHub Actions 快速入门</a></li>
+<li><a href="https://docs.github.com/zh/actions/learn-github-actions/understanding-github-actions?learn=getting_started&amp;learnProduct=actions">了解 GitHub Actions</a></li>
+<li><a href="https://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html">阮一峰|GitHub Actions 入门教程</a></li>
+<li><a href="https://blog.pradumnasaraf.dev/dockerhub-githubactions">Publish a Docker image on DockerHub with GitHub Actions</a></li>
+</ul>
 
+
+    </div>
+    <nav class="hide-on-mobile section-nav">
+        <nav id="TableOfContents">
+  <ol>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#github-action-的组件">Github Action 的组件</a></li>
+    <li><a href="#快速入门">快速入门</a>
+      <ol>
+        <li><a href="#自动构建-docker-镜像并推送到-dockerhub">自动构建 docker 镜像并推送到 dockerhub</a></li>
+      </ol>
+    </li>
+    <li><a href="#推荐">推荐</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ol>
+</nav>
+    </nav>
+</div>
+<div class="post">
     <hr class="footer-separator" />
 <div class="tags">
     
@@ -310,7 +441,7 @@ Workflows：工作流，可以添加到存储库中的自动化过程。工作�
 <div class="back">
     
     
-    Next time, we'll talk about <i>"10 Reasons why gcc SHOULD be re-written in JavaScript - You won&#39;t believe #8!"</i>
+    Next time, we'll talk about <i>"What Tiger King can teach us about x86 Assembly"</i>
     
     
 </div>
@@ -326,6 +457,121 @@ Workflows：工作流，可以添加到存储库中的自动化过程。工作�
 		
 	</nav>
 </div><script>feather.replace()</script>
+	
+	<script>
+    var enableTruncate =  true 
+    var filterDepth = false;
+    const MAX_DEPTH = 9; 
+
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        const observerForTableOfContentActiveState = new IntersectionObserver(entries => {
+            entries.reverse().forEach(entry => {
+                const id = entry.target.getAttribute('id');
+                if (entry.intersectionRatio > 0) {
+                    var selected = document.querySelectorAll(`nav li a[href="#${id}"]`)
+                    if (selected != null) {
+                        selected.forEach(s => {
+                            if (s != null) {
+                                var depth = getDepth(s.parentElement);
+                                if (filterDepth && depth <= MAX_DEPTH) {
+                                    clearActiveStatesInTableOfContents();
+                                    s.parentElement.classList.add('active')
+                                }
+                            } else if (!filterDepth) {
+                                clearActiveStatesInTableOfContents();
+                                s.parentElement.classList.add('active');
+                            }
+                        }
+                        )
+                    }
+
+                }
+            });
+        });
+        document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]').forEach((section) => {
+            observerForTableOfContentActiveState.observe(section);
+        });
+
+    });
+
+    
+    function isVisible(elem) {
+        if (!(elem instanceof Element)) return false; 
+        const style = getComputedStyle(elem);
+        if (style.display === 'none') return false;
+        if (style.visibility !== 'visible') return false;
+        if (style.opacity < 0.1) return false;
+        if (elem.offsetWidth + elem.offsetHeight + elem.getBoundingClientRect().height +
+            elem.getBoundingClientRect().width === 0) {
+            return false;
+        }
+        const elemCenter = {
+            x: elem.getBoundingClientRect().left + elem.offsetWidth / 2,
+            y: elem.getBoundingClientRect().top + elem.offsetHeight / 2
+        };
+        if (elemCenter.x < 0) return false;
+        if (elemCenter.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
+        if (elemCenter.y < 0) return false;
+        if (elemCenter.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
+        let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
+        do {
+            if (pointContainer === elem) return true;
+        } while (pointContainer = pointContainer.parentNode);
+        return false;
+    }
+
+
+    function clearActiveStatesInTableOfContents() {
+        document.querySelectorAll('nav li').forEach((section) => {
+            section.classList.remove('active');
+        });
+    }
+
+    function getDepth(parentElement) {
+        var depth = 0;
+        while (parentElement !== null && parentElement.tagName.toLowerCase() !== 'ul') {
+            depth++;
+            parentElement = parentElement.parentElement;
+        }
+        return depth;
+    }
+
+    function navItems() {
+        
+        var nestedListItems = document.querySelectorAll('nav nav li a');
+        return Array.from(nestedListItems).filter(listItem =>
+            listItem.href != null && listItem.hash.startsWith("#")
+        )
+    }
+
+    function lasItemInNavBarVisible() {
+        var lastItem = navItems().slice(-1)[0]
+        return isVisible(lastItem)
+    }
+
+
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!enableTruncate) return;
+        var navBar = navItems()
+        console.log(navBar)
+        if (!lasItemInNavBarVisible()) {
+            filterDepth = true;
+            
+            navBar.forEach(function (listItem) {
+                var depth = getDepth(listItem.parentElement);
+
+                if (depth > MAX_DEPTH) {
+                    listItem.parentElement.classList.add('depth-nested');
+                }
+            });
+        }
+
+    });
+
+</script>
+
 	
 </body>
 
