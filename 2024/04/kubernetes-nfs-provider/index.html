@@ -21,7 +21,7 @@
 操作系统 主机IP 数据存储目录 Ubuntu 172.16.0.100/24 /data/nfs 部署 step1. 在宿主机部署 NFS 服务 1 2 3 sudo apt update # 服务端 sudo apt install nfs-kernel-server step2. 创建共享目录 创建目录/data/nfs
 1 mkdir -p /data/nfs step3. 宿主机配置 NFS export 1 echo -e &#34;/data/nfs\t172.16.0.100/24(rw,sync,no_subtree_check,no_root_squash)&#34; | sudo tee -a /etc/exports 配置完成后重启 nfs server
 1 sudo systemctl restart nfs-kernel-server step4. 测试 nfs 服务可用 1 /sbin/showmount -e 172.16.0.100 部署 NFS Provider 使用helm 部署">
-  <meta property="og:locale" content="en-us">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2024-04-29T10:47:07+08:00">
@@ -29,8 +29,10 @@
     <meta property="article:tag" content="Kubernetes">
     <meta property="article:tag" content="NFS">
     <meta property="article:tag" content="CSI">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Kubernetes Nfs Provider">
-<meta name="twitter:description" content="前言 本文介绍如何使用 nfs 网络存储为 kubernetes 提供动态的PV创建。
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Kubernetes Nfs Provider">
+  <meta name="twitter:description" content="前言 本文介绍如何使用 nfs 网络存储为 kubernetes 提供动态的PV创建。
 本文使用的环境
 操作系统 主机IP 数据存储目录 Ubuntu 172.16.0.100/24 /data/nfs 部署 step1. 在宿主机部署 NFS 服务 1 2 3 sudo apt update # 服务端 sudo apt install nfs-kernel-server step2. 创建共享目录 创建目录/data/nfs
 1 mkdir -p /data/nfs step3. 宿主机配置 NFS export 1 echo -e &#34;/data/nfs\t172.16.0.100/24(rw,sync,no_subtree_check,no_root_squash)&#34; | sudo tee -a /etc/exports 配置完成后重启 nfs server

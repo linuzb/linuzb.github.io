@@ -27,15 +27,17 @@ Docker 提供了一个自动配置与安装的脚本，支持 Debian、RHEL、SU
 您为 root 用户，或有 sudo 权限，或知道 root 密码； 您系统上有 curl 或 wget 1 2 3 4 5 export DOWNLOAD_URL=&#34;https://mirrors.tuna.tsinghua.edu.cn/docker-ce&#34; # 如您使用 curl curl -fsSL https://get.docker.com/ | sh # 如您使用 wget wget -O- https://get.docker.com/ | sh 使用非 root 使用 docker 通过以上方式安装的docker只能通过 root 用户或者 sudo 权限使用。
 接下来我们将配置非 root 用户使用 docker
 创建 docker 用户组 1 sudo groupadd docker 将当前用户添加到 docker 用户组 1 sudo usermod -aG docker $USER 激活用户组配置 1 newgrp docker 测试 docker 命令 1 docker run hello-world 此命令将下载测镜像并在容器中运行。容器运行时，它会打印一条信息并退出。">
-  <meta property="og:locale" content="en-us">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2024-04-29T22:01:37+08:00">
     <meta property="article:modified_time" content="2024-04-29T22:01:37+08:00">
     <meta property="article:tag" content="Docker">
     <meta property="article:tag" content="Container">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Docker 入门文档">
-<meta name="twitter:description" content="前言 本文将简单介绍 Docker 的安装与使用过程
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Docker 入门文档">
+  <meta name="twitter:description" content="前言 本文将简单介绍 Docker 的安装与使用过程
 docker 安装 docker 官方文档提供了各个系统的安装方式，参考 Install Docker Engine，但是由于国内网络环境，使用官方方式会比较慢，因此国内环境不推荐这种方式安装。下面我们介绍另一种国内安装方式。
 自动化的安装方式，本节内容源自 清华大学开源镜像站|Docker CE 软件仓库，其他安装方式可以参考该文档。
 Docker 提供了一个自动配置与安装的脚本，支持 Debian、RHEL、SUSE 系列及衍生系统的安装。
@@ -549,7 +551,7 @@ Successfully built 44aa4490ce2c
 <div class="back">
     
     
-    Next time, we'll talk about <i>"What Tiger King can teach us about x86 Assembly"</i>
+    Next time, we'll talk about <i>"10 Reasons why gcc SHOULD be re-written in JavaScript - You won&#39;t believe #8!"</i>
     
     
 </div>

@@ -23,7 +23,7 @@ client-id client-secret oauthCallbackUrl 为了避免在配置中明文保存密
 client-id client-secret oauthCallbackUrl 为了避免在配置中明文保存密码，我们将以上信息通过 secret 的形式存储在 Kubernetes 中，可以使用挂载 secret 的形式使用 secret 变量。
 创建secret 接下来我们给 client-id 和 client-secret 创建secret
 1 2 3 echo -n &#34;client-id&#34; | base64 echo -n &#34;client-secret&#34; | base64 echo -n &#34;oauthCallbackUrl&#34; | base64 将以上结果填充到用于创建 secret 的 yaml 中">
-  <meta property="og:locale" content="en-us">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2024-04-28T15:57:55+08:00">
@@ -34,8 +34,10 @@ client-id client-secret oauthCallbackUrl 为了避免在配置中明文保存密
     <meta property="article:tag" content="Jupyter">
     <meta property="article:tag" content="Docker">
     <meta property="article:tag" content="VsCode">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Jupyterhub on Kubernetes">
-<meta name="twitter:description" content="前置准备 首先需要部署 kubernetes 集群，参考k8s deploy Helm | Installing Helm 安装 helm 存储：Longhorn provider 部署 Longhorn 参考 Longhorn deploy
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Jupyterhub on Kubernetes">
+  <meta name="twitter:description" content="前置准备 首先需要部署 kubernetes 集群，参考k8s deploy Helm | Installing Helm 安装 helm 存储：Longhorn provider 部署 Longhorn 参考 Longhorn deploy
 接入 github oauth 本文使用 github oauth 作为认证方式，首先我们需要提前注册一个 GitHub OAuth 应用程序，请参阅 GitHub 有关注册应用程序的官方文档 registering an app.
 然后我们得到三个信息
 client-id client-secret oauthCallbackUrl 为了避免在配置中明文保存密码，我们将以上信息通过 secret 的形式存储在 Kubernetes 中，可以使用挂载 secret 的形式使用 secret 变量。

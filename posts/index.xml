@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>© Copyright notice</copyright>
-    <lastBuildDate>Mon, 06 May 2024 10:01:18 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 05 Jun 2024 08:55:26 +0800</lastBuildDate>
     <atom:link href="https://linuzb.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker Compose Deploy Harbor</title>
+      <link>https://linuzb.github.io/2024/06/docker-compose-deploy-harbor/</link>
+      <pubDate>Wed, 05 Jun 2024 08:55:26 +0800</pubDate>
+      <guid>https://linuzb.github.io/2024/06/docker-compose-deploy-harbor/</guid>
+      <description>下载 harbor 安装器 首先到官方 release 页面查找对应的版本号，使用以下命令下载&#xA;1 2 3 4 5 export HARBOR_VERSION=v2.9.4 wget https://github.com/goharbor/harbor/releases/download/v${HARBOR_VERSION}/harbor-offline-installer-v${HARBOR_VERSION}.tgz tar xvf harbor-offline-installer-v${HARBOR_VERSION}.tgz cd harbor mv harbor.yml.tmp harbor.yml 编辑 harbor.yml 1 vim harbor.yml 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 # 将 hostname 设置成自己的域名或者 ip hostname: 172.16.0.115 http: # port for http, default is 80. If https enabled, this port will redirect to https port # 修改端口 port: 6060 # 如果没有 https 可以将 https 相关的配置注释 # https related config # https: # # https port for harbor, default is 443 # port: 443 # # The path of cert and key files for nginx # certificate: /your/certificate/path # private_key: /your/private/key/path # The default data volume data_volume: /data 详细内容参考文档 Configure the Harbor YML File</description>
+    </item>
     <item>
       <title>Github Action 简明教程</title>
       <link>https://linuzb.github.io/2024/05/github-action-%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</link>
