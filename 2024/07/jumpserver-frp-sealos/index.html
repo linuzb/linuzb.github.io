@@ -14,7 +14,7 @@
 1 2 3 4 5 6 7 8 # 测试环境可以使用，生产环境推荐外置数据 git clone --depth=1 https://github.com/jumpserver/Dockerfile.git cd Dockerfile cp config_example.">
   <meta itemprop="datePublished" content="2024-07-09T16:57:55+08:00">
   <meta itemprop="dateModified" content="2024-07-09T16:57:55+08:00">
-  <meta itemprop="wordCount" content="348">
+  <meta itemprop="wordCount" content="355">
   <meta itemprop="keywords" content="Docker"><meta property="og:url" content="https://linuzb.github.io/2024/07/jumpserver-frp-sealos/">
   <meta property="og:site_name" content="Linuzb&#39; 的博客">
   <meta property="og:title" content="Jumpserver Frp Sealos">
@@ -152,10 +152,10 @@ HTTP_PORT=18080
 </ol>
 <h3 id="sealos-cloud-部署-frp">Sealos Cloud 部署 frp</h3>
 <h4 id="创建应用">创建应用</h4>
-<h5 id="基础配置">基础配置</h5>
+<p><strong>基础配置</strong></p>
 <p>应用名称：frps
 镜像源：snowdreamtech/frps</p>
-<h5 id="网络配置">网络配置</h5>
+<p><strong>网络配置</strong></p>
 <table>
 <thead>
 <tr>
@@ -168,7 +168,7 @@ HTTP_PORT=18080
 <tr>
 <td>7000</td>
 <td>关闭</td>
-<td>由于 ingress 无法开启 tcp 转发，接下来我们将创建一个 nodePort</td>
+<td>由于 ingress 无法开启 tcp 转发，接下来我们将创建一个 nodePort Service</td>
 </tr>
 <tr>
 <td>7080</td>
@@ -177,9 +177,9 @@ HTTP_PORT=18080
 </tr>
 </tbody>
 </table>
-<h5 id="高级配置">高级配置</h5>
+<p><strong>高级配置</strong></p>
 <p>配置文件名： /etc/frp/frps.toml
-配置文件：</p>
+配置文件内容：</p>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -234,7 +234,9 @@ HTTP_PORT=18080
 </span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">type</span>:<span style="color:#bbb"> </span>NodePort<span style="color:#bbb">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>这个 service 只暴露 7000 端口。</p>
+</div><p>接下来创建 service</p>
+<pre tabindex="0"><code>kubectl apply -f svc.yaml
+</code></pre><p>这个 service 只暴露 7000 端口。</p>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
