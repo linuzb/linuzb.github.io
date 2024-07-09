@@ -6,16 +6,16 @@
 	
   <meta itemprop="name" content="Kubespray 部署 kubernetes">
   <meta itemprop="description" content="准备 本文介绍中共使用了四台物理机, 其中一台用户部署 k8s 的机器，另外三台作为 kubernetes 的节点
-机器 ip 系统 用户名 备注 部署机 任意 Ubuntu linuzb 部署k8s机器，非k8s集群节点 kube-master-100 172.16.0.100 Ubutnu linuzb 初始化 k8s master 节点 kube-node-117 172.16.0.117 Ubutnu linuzb 初始化 k8s node kube-node-114 172.16.0.114 Ubutnu linuzb 后续加入的 k8s node kubespray 配置 自定义配置 1 2 3 4 git clone https://github.com/kubernetes-sigs/kubespray cd kubespray # 拷贝集群清单 cp -rfp inventory/sample inventory/mycluster inventory inventory.ini
+机器 ip 系统 用户名 备注 部署机 任意 Ubuntu linuzb 部署k8s机器，非k8s集群节点 kube-master-100 172.16.0.100 Ubutnu linuzb 初始化 k8s master 节点 kube-node-117 172.16.0.117 Ubutnu linuzb 初始化 k8s node kube-node-114 172.16.0.114 Ubutnu linuzb 后续加入的 k8s node kubespray 配置 自定义配置 1 2 3 4 git clone https://github.com/kubernetes-sigs/kubespray cd kubespray # 拷贝集群清单 cp -rfp inventory/sample inventory/mycluster inventory inventory/mycluster/inventory.ini
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 # ## Configure &#39;ip&#39; variable to bind kubernetes services on a # ## different ip than the default iface # ## We should set etcd_member_name for etcd cluster.">
   <meta itemprop="datePublished" content="2024-04-28T10:06:36+08:00">
   <meta itemprop="dateModified" content="2024-04-28T10:06:36+08:00">
-  <meta itemprop="wordCount" content="639">
+  <meta itemprop="wordCount" content="640">
   <meta itemprop="keywords" content="Kubernetes,Kubespray"><meta property="og:url" content="https://linuzb.github.io/2024/04/kubespray-%E9%83%A8%E7%BD%B2-kubernetes/">
   <meta property="og:site_name" content="Linuzb&#39; 的博客">
   <meta property="og:title" content="Kubespray 部署 kubernetes">
   <meta property="og:description" content="准备 本文介绍中共使用了四台物理机, 其中一台用户部署 k8s 的机器，另外三台作为 kubernetes 的节点
-机器 ip 系统 用户名 备注 部署机 任意 Ubuntu linuzb 部署k8s机器，非k8s集群节点 kube-master-100 172.16.0.100 Ubutnu linuzb 初始化 k8s master 节点 kube-node-117 172.16.0.117 Ubutnu linuzb 初始化 k8s node kube-node-114 172.16.0.114 Ubutnu linuzb 后续加入的 k8s node kubespray 配置 自定义配置 1 2 3 4 git clone https://github.com/kubernetes-sigs/kubespray cd kubespray # 拷贝集群清单 cp -rfp inventory/sample inventory/mycluster inventory inventory.ini
+机器 ip 系统 用户名 备注 部署机 任意 Ubuntu linuzb 部署k8s机器，非k8s集群节点 kube-master-100 172.16.0.100 Ubutnu linuzb 初始化 k8s master 节点 kube-node-117 172.16.0.117 Ubutnu linuzb 初始化 k8s node kube-node-114 172.16.0.114 Ubutnu linuzb 后续加入的 k8s node kubespray 配置 自定义配置 1 2 3 4 git clone https://github.com/kubernetes-sigs/kubespray cd kubespray # 拷贝集群清单 cp -rfp inventory/sample inventory/mycluster inventory inventory/mycluster/inventory.ini
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 # ## Configure &#39;ip&#39; variable to bind kubernetes services on a # ## different ip than the default iface # ## We should set etcd_member_name for etcd cluster.">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
@@ -28,7 +28,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Kubespray 部署 kubernetes">
   <meta name="twitter:description" content="准备 本文介绍中共使用了四台物理机, 其中一台用户部署 k8s 的机器，另外三台作为 kubernetes 的节点
-机器 ip 系统 用户名 备注 部署机 任意 Ubuntu linuzb 部署k8s机器，非k8s集群节点 kube-master-100 172.16.0.100 Ubutnu linuzb 初始化 k8s master 节点 kube-node-117 172.16.0.117 Ubutnu linuzb 初始化 k8s node kube-node-114 172.16.0.114 Ubutnu linuzb 后续加入的 k8s node kubespray 配置 自定义配置 1 2 3 4 git clone https://github.com/kubernetes-sigs/kubespray cd kubespray # 拷贝集群清单 cp -rfp inventory/sample inventory/mycluster inventory inventory.ini
+机器 ip 系统 用户名 备注 部署机 任意 Ubuntu linuzb 部署k8s机器，非k8s集群节点 kube-master-100 172.16.0.100 Ubutnu linuzb 初始化 k8s master 节点 kube-node-117 172.16.0.117 Ubutnu linuzb 初始化 k8s node kube-node-114 172.16.0.114 Ubutnu linuzb 后续加入的 k8s node kubespray 配置 自定义配置 1 2 3 4 git clone https://github.com/kubernetes-sigs/kubespray cd kubespray # 拷贝集群清单 cp -rfp inventory/sample inventory/mycluster inventory inventory/mycluster/inventory.ini
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 # ## Configure &#39;ip&#39; variable to bind kubernetes services on a # ## different ip than the default iface # ## We should set etcd_member_name for etcd cluster.">
 <link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/normalize.css" />
 	<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/main.css" />
@@ -183,7 +183,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h4 id="inventory">inventory</h4>
-<p>inventory.ini</p>
+<p>inventory/mycluster/inventory.ini</p>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -286,7 +286,7 @@ inventory/mycluster/group_vars/all/containerd.yml</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#998;font-style:italic"># containerd_state_dir: &#34;/run/containerd&#34;</span><span style="color:#bbb">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>配置容器registry</p>
+</div><p>配置容器registry(暂不配置，使用 dragonfly)</p>
 <p>inventory/mycluster/group_vars/all/containerd.yml</p>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -395,7 +395,7 @@ inventory/mycluster/group_vars/k8s_cluster/k8s-cluster.yml</p>
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># 要输入两次密码</span>
-</span></span><span style="display:flex;"><span>ansible-playbook -i /inventory/inventory.ini cluster.yml --user linuzb --ask-pass --become --ask-become-pass
+</span></span><span style="display:flex;"><span>ansible-playbook -i /inventory/inventory.ini cluster.yml --user k8s --ask-pass --become --ask-become-pass
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h4 id="扩容节点">扩容节点</h4>
@@ -591,7 +591,7 @@ inventory/mycluster/group_vars/k8s_cluster/k8s-cluster.yml</p>
 <div class="back">
     
     
-    Next time, we'll talk about <i>"10 Reasons why gcc SHOULD be re-written in JavaScript - You won&#39;t believe #8!"</i>
+    Next time, we'll talk about <i>"What Tiger King can teach us about x86 Assembly"</i>
     
     
 </div>
