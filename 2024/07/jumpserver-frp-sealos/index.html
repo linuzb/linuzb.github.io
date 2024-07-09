@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Jumpserver Frp Sealos - Linuzb&#39; 的博客</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	
+  <meta itemprop="name" content="Jumpserver Frp Sealos">
+  <meta itemprop="description" content="前言 我们常常会遇到访问内网的场景（内网穿透）。JumpServer是广受欢迎的开源堡垒机，是符合 4A 规范的专业运维安全审计系统。我们可以使用 jumpserver 作为跳板机访问内网服务。
+但是仅仅有 jumpserver 还不够，我们需要实现内网穿透，即通过公网访问内部的 jumpserver。因此这里用到了 fatedier/frp，一个反向代理工具，可帮助您将 NAT 或防火墙后的本地服务器接入互联网。
+由于 jumpserver 部署在内网，且通过 http 暴露服务，如果我们直接使用 frp 代理 http 服务，很显然达不到安全的需求，因此我们还需要在公网使用一个网关，将 http 应用封装成 https 服务。一种实现方式是购买云主机和域名，部署 nginx 并通过 Let’s Encrypt Let’s Encrypt签发证书。但是这样涉及到金钱成本以及备案成本。我们暂不考虑。
+这里介绍的暴露 frp 服务的方式是使用 Sealos Cloud。Sealos 是一个云上的 kubernetes 平台，我们可以直接在上面部署 frp pod，然后利用 Sealos 提供的公网网关来代理我们的服务。
+部署 JumpServer 首先我们在内网的一台机器上部署 jumpserver。为了方便部署，我们使用 docker 部署
+这里参考 jumpserver docker 部署文档。
+1 2 3 4 5 6 7 8 # 测试环境可以使用，生产环境推荐外置数据 git clone --depth=1 https://github.com/jumpserver/Dockerfile.git cd Dockerfile cp config_example.">
+  <meta itemprop="datePublished" content="2024-07-09T16:57:55+08:00">
+  <meta itemprop="dateModified" content="2024-07-09T16:57:55+08:00">
+  <meta itemprop="wordCount" content="348">
+  <meta itemprop="keywords" content="Docker"><meta property="og:url" content="https://linuzb.github.io/2024/07/jumpserver-frp-sealos/">
+  <meta property="og:site_name" content="Linuzb&#39; 的博客">
+  <meta property="og:title" content="Jumpserver Frp Sealos">
+  <meta property="og:description" content="前言 我们常常会遇到访问内网的场景（内网穿透）。JumpServer是广受欢迎的开源堡垒机，是符合 4A 规范的专业运维安全审计系统。我们可以使用 jumpserver 作为跳板机访问内网服务。
+但是仅仅有 jumpserver 还不够，我们需要实现内网穿透，即通过公网访问内部的 jumpserver。因此这里用到了 fatedier/frp，一个反向代理工具，可帮助您将 NAT 或防火墙后的本地服务器接入互联网。
+由于 jumpserver 部署在内网，且通过 http 暴露服务，如果我们直接使用 frp 代理 http 服务，很显然达不到安全的需求，因此我们还需要在公网使用一个网关，将 http 应用封装成 https 服务。一种实现方式是购买云主机和域名，部署 nginx 并通过 Let’s Encrypt Let’s Encrypt签发证书。但是这样涉及到金钱成本以及备案成本。我们暂不考虑。
+这里介绍的暴露 frp 服务的方式是使用 Sealos Cloud。Sealos 是一个云上的 kubernetes 平台，我们可以直接在上面部署 frp pod，然后利用 Sealos 提供的公网网关来代理我们的服务。
+部署 JumpServer 首先我们在内网的一台机器上部署 jumpserver。为了方便部署，我们使用 docker 部署
+这里参考 jumpserver docker 部署文档。
+1 2 3 4 5 6 7 8 # 测试环境可以使用，生产环境推荐外置数据 git clone --depth=1 https://github.com/jumpserver/Dockerfile.git cd Dockerfile cp config_example.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-07-09T16:57:55+08:00">
+    <meta property="article:modified_time" content="2024-07-09T16:57:55+08:00">
+    <meta property="article:tag" content="Docker">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Jumpserver Frp Sealos">
+  <meta name="twitter:description" content="前言 我们常常会遇到访问内网的场景（内网穿透）。JumpServer是广受欢迎的开源堡垒机，是符合 4A 规范的专业运维安全审计系统。我们可以使用 jumpserver 作为跳板机访问内网服务。
+但是仅仅有 jumpserver 还不够，我们需要实现内网穿透，即通过公网访问内部的 jumpserver。因此这里用到了 fatedier/frp，一个反向代理工具，可帮助您将 NAT 或防火墙后的本地服务器接入互联网。
+由于 jumpserver 部署在内网，且通过 http 暴露服务，如果我们直接使用 frp 代理 http 服务，很显然达不到安全的需求，因此我们还需要在公网使用一个网关，将 http 应用封装成 https 服务。一种实现方式是购买云主机和域名，部署 nginx 并通过 Let’s Encrypt Let’s Encrypt签发证书。但是这样涉及到金钱成本以及备案成本。我们暂不考虑。
+这里介绍的暴露 frp 服务的方式是使用 Sealos Cloud。Sealos 是一个云上的 kubernetes 平台，我们可以直接在上面部署 frp pod，然后利用 Sealos 提供的公网网关来代理我们的服务。
+部署 JumpServer 首先我们在内网的一台机器上部署 jumpserver。为了方便部署，我们使用 docker 部署
+这里参考 jumpserver docker 部署文档。
+1 2 3 4 5 6 7 8 # 测试环境可以使用，生产环境推荐外置数据 git clone --depth=1 https://github.com/jumpserver/Dockerfile.git cd Dockerfile cp config_example.">
+<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://linuzb.github.io/css/main.css" />
+
+        <link id="dark-scheme" rel="stylesheet" type="text/css" href="https://linuzb.github.io/css/dark.css" />
+
+	<script src="https://linuzb.github.io/js/feather.min.js"></script>
+	
+		<script src="https://linuzb.github.io/js/main.js"></script>
+</head>
+
+
+<body>
+
+
+	
+	<div class="container wrapper">
+		<div class="header">
+	
+	<h1 class="site-title"><a href="https://linuzb.github.io/">Linuzb&#39; 的博客</a></h1>
+	<div class="site-description"><p>记录学习点滴</p><nav class="nav social">
+			<ul class="flat"><li><a href="https://github.com/linuzb" title="Github"><i data-feather="github"></i></a></li><li><a href="/index.xml" title="RSS"><i data-feather="rss"></i></a></li><span class="scheme-toggle"><a href="#" id="scheme-toggle"></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags &amp; Stats</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post">
+    <div class="post-header">
+    
+    <div class="meta">
+        <div class="date">
+            <span class="day">09</span>
+            <span class="rest">Jul 2024</span>
+        </div>
+    </div>
+    
+    <div class="matter">
+        <h1 class="title">Jumpserver Frp Sealos</h1>
+    </div>
+</div>
+
+
+    
+    
+    <h2 id="前言">前言</h2>
+<p>我们常常会遇到访问内网的场景（内网穿透）。<a href="https://docs.jumpserver.org/zh/v2/">JumpServer</a>是广受欢迎的开源堡垒机，是符合 4A 规范的专业运维安全审计系统。我们可以使用 jumpserver 作为跳板机访问内网服务。</p>
+<p>但是仅仅有 jumpserver 还不够，我们需要实现内网穿透，即通过公网访问内部的 jumpserver。因此这里用到了 <a href="https://github.com/fatedier/frp">fatedier/frp</a>，一个反向代理工具，可帮助您将 NAT 或防火墙后的本地服务器接入互联网。</p>
+<p>由于 jumpserver 部署在内网，且通过 http 暴露服务，如果我们直接使用 frp 代理 http 服务，很显然达不到安全的需求，因此我们还需要在公网使用一个网关，将 http 应用封装成 https 服务。一种实现方式是购买云主机和域名，部署 nginx 并通过 Let&rsquo;s Encrypt <a href="https://letsencrypt.org/">Let&rsquo;s Encrypt</a>签发证书。但是这样涉及到金钱成本以及备案成本。我们暂不考虑。</p>
+<p>这里介绍的暴露 frp 服务的方式是使用 <a href="https://bja.sealos.run">Sealos Cloud</a>。Sealos 是一个云上的 kubernetes 平台，我们可以直接在上面部署 frp pod，然后利用 Sealos 提供的公网网关来代理我们的服务。</p>
+<h2 id="部署">部署</h2>
+<h3 id="jumpserver">JumpServer</h3>
+<p>首先我们在内网的一台机器上部署 jumpserver。为了方便部署，我们使用 docker 部署</p>
+<p>这里参考 <a href="https://github.com/jumpserver/Dockerfile/blob/master/README.md">jumpserver</a> docker 部署文档。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># 测试环境可以使用，生产环境推荐外置数据</span>
+</span></span><span style="display:flex;"><span>git clone --depth<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span> https://github.com/jumpserver/Dockerfile.git
+</span></span><span style="display:flex;"><span><span style="color:#0086b3">cd</span> Dockerfile
+</span></span><span style="display:flex;"><span>cp config_example.conf .env
+</span></span><span style="display:flex;"><span>docker compose -f docker-compose-network.yml -f docker-compose-redis.yml -f docker-compose-mariadb.yml -f docker-compose-init-db.yml up
+</span></span><span style="display:flex;"><span>docker compose -f docker-compose-network.yml -f docker-compose-redis.yml -f docker-compose-mariadb.yml -f docker-compose.yml up -d
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker rm jms_init_db
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>为了避免 jumpserver 80端口和宿主机 80端口冲突，这里我们修改 <code>.env</code> 文件的 <code>HTTP_PORT</code> 为 <code>18080</code></p>
+<pre tabindex="0"><code># Web
+HTTP_PORT=18080
+</code></pre><p>部署完成后，在内网可以直接使用 <code>http://nodeip:18080</code> 访问 jumpserver 服务</p>
+<h4 id="jumpserver-配置">jumpserver 配置</h4>
+<ol>
+<li>给 admin 账号配置 MFA 认证</li>
+<li>创建用户，用户配置 MFA 认证</li>
+<li>创建资产</li>
+<li>创建账号</li>
+<li>将资产授权给用户</li>
+</ol>
+<h3 id="sealos-cloud-部署-frp">Sealos Cloud 部署 frp</h3>
+<h4 id="创建应用">创建应用</h4>
+<h5 id="基础配置">基础配置</h5>
+<p>应用名称：frps
+镜像源：snowdreamtech/frps</p>
+<h5 id="网络配置">网络配置</h5>
+<table>
+<thead>
+<tr>
+<th>容器暴露端口</th>
+<th>开启公网访问</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7000</td>
+<td>关闭</td>
+<td>由于 ingress 无法开启 tcp 转发，接下来我们将创建一个 nodePort</td>
+</tr>
+<tr>
+<td>7080</td>
+<td>开启</td>
+<td>使用 https 协议，用于代理 jumpserver http 服务</td>
+</tr>
+</tbody>
+</table>
+<h5 id="高级配置">高级配置</h5>
+<p>配置文件名： /etc/frp/frps.toml
+配置文件：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>bindPort = 7000<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>auth.method = &#34;token&#34;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>auth.token = &#34;&#34;<span style="color:#bbb">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="创建-nodeport">创建 NodePort</h4>
+<p>在以上frp的配置中，服务端使用 7000 端口监听，使用的协议是 TCP。</p>
+<p>Sealos Cloud 的应用创建界面中，网络配置开启公网访问实际上是一个 nginx ingress 的网关，Sealos Cloud 的应用创建接口无法直接代理 TCP 协议。因此，我们将创建一个 NodePort 类型的Service。</p>
+<p>我们打开 Sealos Cloud 的在线终端，使用 vim 创建 svc.yaml 文件</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#000080">apiVersion</span>:<span style="color:#bbb"> </span>v1<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">kind</span>:<span style="color:#bbb"> </span>Service<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">labels</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">cloud.sealos.io/app-deploy-manager</span>:<span style="color:#bbb"> </span>frps<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">name</span>:<span style="color:#bbb"> </span>frps-nodeport<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">spec</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">ports</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span>- <span style="color:#000080">name</span>:<span style="color:#bbb"> </span>jumpserver<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">port</span>:<span style="color:#bbb"> </span><span style="color:#099">7000</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">protocol</span>:<span style="color:#bbb"> </span>TCP<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">targetPort</span>:<span style="color:#bbb"> </span><span style="color:#099">7000</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">selector</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">app</span>:<span style="color:#bbb"> </span>frps<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">sessionAffinity</span>:<span style="color:#bbb"> </span>None<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">type</span>:<span style="color:#bbb"> </span>NodePort<span style="color:#bbb">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个 service 只暴露 7000 端口。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl get svc frps-nodeport
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们记录下 7000 端口对应的 NodePort 35934，这个 35934 是客户端连接 server 的端口号。</p>
+<h4 id="客户端-frp">客户端 frp</h4>
+<p>我们同样使用 docker 部署客户端 frp</p>
+<p>docker-compose.yaml</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#000080">version</span>:<span style="color:#bbb"> </span><span style="color:#d14">&#39;3&#39;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">services</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#000080">frps</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">image</span>:<span style="color:#bbb"> </span>snowdreamtech/frpc<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">container_name</span>:<span style="color:#bbb"> </span>frps<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">restart</span>:<span style="color:#bbb"> </span>always<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">volumes</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- ./frpc.toml:/etc/frp/frpc.toml<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000080">deploy</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#000080">mode</span>:<span style="color:#bbb"> </span>replicated<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#000080">replicas</span>:<span style="color:#bbb"> </span><span style="color:#099">1</span><span style="color:#bbb">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>frpc.toml</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>serverAddr = <span style="color:#d14">&#34;xxx.bja.sealos.run&#34;</span> <span style="color:#998;font-style:italic"># 公网网络配置中的 host 地址</span>
+</span></span><span style="display:flex;"><span>serverPort = <span style="color:#099">35934</span> <span style="color:#998;font-style:italic"># 7000 对应的 nodePort</span>
+</span></span><span style="display:flex;"><span>auth.token = <span style="color:#d14">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[[proxies]]
+</span></span><span style="display:flex;"><span>name = <span style="color:#d14">&#34;jumpserver&#34;</span>
+</span></span><span style="display:flex;"><span>type = <span style="color:#d14">&#34;tcp&#34;</span>
+</span></span><span style="display:flex;"><span>localIP = <span style="color:#d14">&#34;172.16.0.124&#34;</span>
+</span></span><span style="display:flex;"><span>localPort = <span style="color:#099">18080</span>
+</span></span><span style="display:flex;"><span>remotePort = <span style="color:#099">7080</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>部署frp</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>docker compose up -d
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+    <hr class="footer-separator" />
+<div class="tags">
+    
+    
+    <ul class="flat">
+        
+        
+        <li class="tag-li"><a href="/tags/docker">Docker</a>
+        </li>
+        
+    </ul>
+    
+    
+</div>
+
+
+<div class="back">
+    <a href="https://github.com/linuzb/linuzb-blog/blob/master/content/posts/jumpserver-frp-sealos.md" title="github"><i
+            data-feather="github"></i> Edit this on GitHub</a>
+</div>
+
+
+<div class="back">
+    <a href="https://linuzb.github.io/"><span aria-hidden="true">← Back</span></a>
+</div>
+
+
+<div class="back">
+    
+    
+    Next time, we'll talk about <i>"10 Reasons why gcc SHOULD be re-written in JavaScript - You won&#39;t believe #8!"</i>
+    
+    
+</div>
+
+</div>
+
+	</div>
+	
+
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div>2024  © Copyright notice </div>
+		
+	</nav>
+</div><script>feather.replace()</script>
+	
+</body>
+
+</html>

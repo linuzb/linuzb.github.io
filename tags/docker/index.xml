@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>© Copyright notice</copyright>
-    <lastBuildDate>Mon, 29 Apr 2024 22:01:37 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 09 Jul 2024 16:57:55 +0800</lastBuildDate>
     <atom:link href="https://linuzb.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Jumpserver Frp Sealos</title>
+      <link>https://linuzb.github.io/2024/07/jumpserver-frp-sealos/</link>
+      <pubDate>Tue, 09 Jul 2024 16:57:55 +0800</pubDate>
+      <guid>https://linuzb.github.io/2024/07/jumpserver-frp-sealos/</guid>
+      <description>前言 我们常常会遇到访问内网的场景（内网穿透）。JumpServer是广受欢迎的开源堡垒机，是符合 4A 规范的专业运维安全审计系统。我们可以使用 jumpserver 作为跳板机访问内网服务。&#xA;但是仅仅有 jumpserver 还不够，我们需要实现内网穿透，即通过公网访问内部的 jumpserver。因此这里用到了 fatedier/frp，一个反向代理工具，可帮助您将 NAT 或防火墙后的本地服务器接入互联网。&#xA;由于 jumpserver 部署在内网，且通过 http 暴露服务，如果我们直接使用 frp 代理 http 服务，很显然达不到安全的需求，因此我们还需要在公网使用一个网关，将 http 应用封装成 https 服务。一种实现方式是购买云主机和域名，部署 nginx 并通过 Let&amp;rsquo;s Encrypt Let&amp;rsquo;s Encrypt签发证书。但是这样涉及到金钱成本以及备案成本。我们暂不考虑。&#xA;这里介绍的暴露 frp 服务的方式是使用 Sealos Cloud。Sealos 是一个云上的 kubernetes 平台，我们可以直接在上面部署 frp pod，然后利用 Sealos 提供的公网网关来代理我们的服务。&#xA;部署 JumpServer 首先我们在内网的一台机器上部署 jumpserver。为了方便部署，我们使用 docker 部署&#xA;这里参考 jumpserver docker 部署文档。&#xA;1 2 3 4 5 6 7 8 # 测试环境可以使用，生产环境推荐外置数据 git clone --depth=1 https://github.com/jumpserver/Dockerfile.git cd Dockerfile cp config_example.</description>
+    </item>
     <item>
       <title>Docker 入门文档</title>
       <link>https://linuzb.github.io/2024/04/docker-%E5%85%A5%E9%97%A8%E6%96%87%E6%A1%A3/</link>
